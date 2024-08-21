@@ -5,11 +5,41 @@ Code listings for the "Just Use Postgres" book.
 
 ## Chapter 1, Meeting Postgres
 
-**Listin 1.1 Starting Postgres Container in Docker**
+**Listing 1.1 Starting Postgres container in Docker**
 ```shell
 docker run --name postgres \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
     -p 5432:5432 \
     -v ~/postgres-volume/:/var/lib/postgresql/data \
     -d postgres:latest
+```
+
+**Listing 1.2 Inserting 1000 sample trades**
+```sql
+INSERT INTO trade (id, buyer_id, symbol, order_quantity, bid_price, order_time)
+    SELECT
+        id,
+        floor(1 + random() * 10) as buyer_id,
+        (array['AAPL','F','DASH'])[floor(1 + random() * 3)] as symbol,
+        floor(1 + random() * 20) as order_quantity,
+        round((10 + random() * 10)::numeric, 2) as bid_price,
+        now() as order_time
+    FROM generate_series(1,1000) AS id;
+```
+
+**Listing 1.3 Most traded stocks by volume**
+```sql
+SELECT symbol, count(order_quantity) AS total_volume
+FROM trade
+GROUP BY symbol
+ORDER BY total_volume DESC;
+```
+
+**Listing 1.4 Top three buyers**
+```sql
+SELECT buyer_id, sum(bid_price * order_quantity) AS total_value
+FROM trade
+GROUP BY buyer_id
+ORDER BY total_value DESC
+LIMIT 3;
 ```
