@@ -14,6 +14,15 @@ docker run --name postgres \
     -d postgres:latest
 ```
 
+For PowerShell on Windows, use this command instead:
+```shell
+docker run --name postgres `
+    -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
+    -p 5432:5432 `
+    -v ~/postgres-volume/:/var/lib/postgresql/data `
+    -d postgres:latest
+```
+
 **Listing 1.2 Creating sample table**
 ```sql
 CREATE TABLE Trade(
