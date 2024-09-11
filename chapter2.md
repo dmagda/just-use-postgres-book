@@ -138,7 +138,7 @@ WHERE id = 1 or id = 3;
 **Listing 2.19 Creating order and order_item tables**
 ```sql
 CREATE TABLE sales.order (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),   #A
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     customer_id int REFERENCES customers.account(id),
     order_date timestamp DEFAULT CURRENT_TIMESTAMP,
     total_amount decimal(10, 2)
@@ -148,8 +148,8 @@ CREATE TABLE sales.order_item (
     order_id UUID REFERENCES sales.order(id),
     product_id int REFERENCES products.catalog(id),
     quantity int CHECK (quantity > 0),
-    price decimal(10, 2),  #B
-    PRIMARY KEY (order_id, product_id)   #C
+    price decimal(10, 2),
+    PRIMARY KEY (order_id, product_id)
 );
 ```
 
