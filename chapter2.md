@@ -352,3 +352,67 @@ AFTER INSERT OR UPDATE OR DELETE ON sales.order_item
 FOR EACH ROW
 EXECUTE FUNCTION update_order_total();
 ```
+
+**Listing 2.33  Sales report summary**
+```sql
+SELECT 
+    c.name AS product_name,
+    c.category,
+    SUM(oi.quantity) AS total_quantity_sold,
+    SUM(oi.quantity * oi.price) AS total_revenue
+FROM products.catalog c
+LEFT JOIN sales.order_item oi ON c.id = oi.product_id
+GROUP BY c.id
+ORDER BY total_quantity_sold DESC, total_revenue DESC;
+```
+
+**Listing 2.34 View for the sales report summary**
+```sql
+CREATE VIEW product_sales_summary AS
+SELECT
+    c.name AS product_name,
+    c.category,
+    SUM(oi.quantity) AS total_quantity_sold,
+    SUM(oi.quantity * oi.price) AS total_revenue
+FROM products.catalog c
+LEFT JOIN sales.order_item oi ON c.id = oi.product_id
+GROUP BY c.id
+ORDER BY total_quantity_sold DESC, total_revenue DESC;
+```
+
+**Listing 2.35 View for monthly sales**
+```sql
+CREATE MATERIALIZED VIEW monthly_sales_summary AS
+SELECT 
+    date_trunc('month', o.order_date) AS sales_month,
+    SUM(oi.quantity * oi.price) AS total_revenue,
+    COUNT(DISTINCT(o.id)) AS total_orders
+FROM sales.order o
+JOIN sales.order_item oi ON o.id = oi.order_id
+GROUP BY sales_month
+ORDER BY sales_month;
+```
+
+**Listing 2.36 Buying two flavors of coffee**
+```sql
+SELECT order_add_item(
+    customer_id_param => 3,
+    product_id_param => 1,
+    quantity_param => 3
+    );
+        
+SELECT order_add_item(
+    customer_id_param => 3,
+    product_id_param => 3,
+    quantity_param => 2
+    );
+        
+SELECT * FROM order_checkout(customer_id_param => 3);
+```
+
+**Listing 2.37 Refreshing and querying materialized view**
+```sql
+REFRESH MATERIALIZED VIEW monthly_sales_summary;
+
+SELECT * FROM monthly_sales_summary;
+```
