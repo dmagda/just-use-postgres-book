@@ -338,7 +338,7 @@ BEGIN
         FROM sales.order_item oi
         WHERE oi.order_id = COALESCE(NEW.order_id, OLD.order_id)
     )
-    WHERE id = COALESCE(NEW.order_id, OLD.order_id) AND status = ‘pending’;
+    WHERE id = COALESCE(NEW.order_id, OLD.order_id) AND status = 'pending';
         
     RETURN NEW;
 END;
