@@ -416,3 +416,37 @@ REFRESH MATERIALIZED VIEW monthly_sales_summary;
 
 SELECT * FROM monthly_sales_summary;
 ```
+
+**Listing 2.38 Creating admin-level role for coffee chain**
+```sql
+CREATE ROLE coffee_chain_admin WITH LOGIN PASSWORD 'password';
+							
+GRANT CONNECT ON DATABASE coffee_chain TO coffee_chain_admin;
+							
+REVOKE CONNECT ON DATABASE coffee_chain FROM PUBLIC;
+```
+
+**Listing 2.39 Setting up permissions for the role**
+```sql
+GRANT USAGE ON SCHEMA public TO coffee_chain_admin;
+GRANT USAGE ON SCHEMA products TO coffee_chain_admin;
+GRANT USAGE ON SCHEMA customers TO coffee_chain_admin;
+GRANT USAGE ON SCHEMA sales TO coffee_chain_admin;
+							
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO coffee_chain_admin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA products TO coffee_chain_admin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA customers TO coffee_chain_admin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA sales TO coffee_chain_admin;
+							
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA products TO coffee_chain_admin;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA customers TO coffee_chain_admin;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA sales TO coffee_chain_admin;
+```
+
+**Listing 2.40 Revoking access on brewery and postgres databases**
+```sql
+REVOKE CONNECT ON DATABASE brewery FROM PUBLIC;
+REVOKE CONNECT ON DATABASE postgres FROM PUBLIC;
+```
+
+
