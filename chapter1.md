@@ -2,7 +2,7 @@
 
 Code listings for the Chapter 1, Meeting Postgres.
 
-**Listing 1.1 Starting Postgres container in Docker**
+**Listing 1.1 Starting Postgres container on Unix**
 ```shell
 docker run --name postgres \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
@@ -11,7 +11,7 @@ docker run --name postgres \
     -d postgres:latest
 ```
 
-For PowerShell on Windows, use this command instead:
+**Listing 1.2 Starting Postgres container on Windows**
 ```shell
 docker run --name postgres `
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
@@ -20,12 +20,12 @@ docker run --name postgres `
     -d postgres:latest
 ```
 
-**Listing 1.2 Connecting with psql**
+**Listing 1.3 Connecting with psql**
 ```shell
 docker exec -it postgres psql -U postgres
 ```
 
-**Listing 1.3 Creating sample table**
+**Listing 1.4 Creating sample table**
 ```sql
 CREATE TABLE Trade(
     id bigint,
@@ -37,20 +37,20 @@ CREATE TABLE Trade(
 );
 ```
 
-**Listing 1.4 Generating random buyers**
+**Listing 1.5 Generating random buyers**
 ```sql
 SELECT id, floor(1 + random() * 10) AS buyer_id 
 FROM generate_series(1,5) AS id;
 ```
 
-**Listing 1.5 Generating random stock symbols**
+**Listing 1.6 Generating random stock symbols**
 ```sql
 SELECT id, 
 (array['AAPL','F','DASH'])[floor(1 + random() * 3)] AS symbol 
 FROM generate_series(1,5) AS id;
 ```
 
-**Listing 1.6 Inserting 1000 sample trades**
+**Listing 1.7 Inserting 1000 sample trades**
 ```sql
 INSERT INTO trade (id, buyer_id, symbol, order_quantity, bid_price, order_time)
     SELECT
@@ -63,7 +63,7 @@ INSERT INTO trade (id, buyer_id, symbol, order_quantity, bid_price, order_time)
     FROM generate_series(1,1000) AS id;
 ```
 
-**Listing 1.7 Most traded stocks by volume**
+**Listing 1.8 Most traded stocks by volume**
 ```sql
 SELECT symbol, count(order_quantity) AS total_volume
 FROM trade
@@ -71,7 +71,7 @@ GROUP BY symbol
 ORDER BY total_volume DESC;
 ```
 
-**Listing 1.8 Top three buyers**
+**Listing 1.9 Top three buyers**
 ```sql
 SELECT buyer_id, sum(bid_price * order_quantity) AS total_value
 FROM trade
