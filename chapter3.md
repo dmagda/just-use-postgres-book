@@ -107,3 +107,84 @@ SELECT is_change_visible_to_cte,
 FROM updated_play up
 JOIN current_play_duration cp ON up.song_id = cp.song_id;
 ```
+
+**Listing 3.7 Recursive query execution flow in pseudo-code**
+```javascript
+// Step 1: Evaluate the non-recursive term
+non_recursive_result = execute(non_recursive_term); 
+						
+// Step 2: Remove duplicates, if UNION is used
+// Skip if the UNION ALL is used instead.
+if (using UNION)
+    non_recursive_result = remove_duplicates(non_recursive_result);
+					    
+// Step 3: Add the non-recursive result to the final result set
+final_result.add(non_recursive_result);
+					
+// Step 4: Initialize the working table with the non-recursive result
+working_table = non_recursive_result;
+					
+// Step 5: Execute the recursive term until the working table is not empty
+// The working table is empty when the recursive condition resolves to true
+while (working_table is not empty) {
+    // Step 6: Evaluate the recursive term using current working table as input
+    recursive_result = execute(recursive_term, using=working_table);
+							
+    // Step 7: If UNION is used (not UNION ALL), discard duplicates from:
+    //    1. The recursive result itself
+    //    2. Any rows that already exist in the final result set
+    if (using UNION)
+        recursive_result = 
+            remove_duplicates(recursive_result, excluding=final_result);
+							
+    // Step 8: Add the recursive result to the final result set and
+    // also place it in the temporary intermediate table
+    final_result.add(intermidiate_table);
+    intermidiate_table = recursive_result;
+						
+    // Step 9: Replace the working table with the contents of the intermediate
+    // table
+    working_table = intermidiate_table;
+}					
+					
+// Step 10: Return the final result
+return final_result;
+```
+
+**Listing 3.8 Songs played in sequence after a specific one**
+```sql
+WITH RECURSIVE play_sequence AS (
+    SELECT id, user_id, song_id, play_start_time, play_duration, played_after
+    FROM streaming.plays
+    WHERE id = 5	 	 
+			
+    UNION ALL		
+				
+    SELECT p.id, p.user_id, p.song_id, p.play_start_time, p.play_duration, p.played_after
+    FROM streaming.plays p
+    JOIN play_sequence ps ON p.played_after = ps.id
+)		
+SELECT * FROM play_sequence
+ORDER BY play_start_time;
+```
+
+**Listing 3.9 Calculating total play duration for sequence**
+```sql
+WITH RECURSIVE play_sequence(parent_id, path, total_duration) AS (
+    SELECT id, ARRAY[id], play_duration
+    FROM streaming.plays
+    WHERE id = 5
+
+    UNION ALL
+
+    SELECT p.id, ps.path || p.id, total_duration + p.play_duration
+    FROM streaming.plays p
+    JOIN play_sequence ps ON p.played_after = ps.parent_id
+)
+SELECT ps.parent_id, p.song_id, p.play_start_time, p.play_duration,
+ps.path, ps.total_duration
+FROM play_sequence ps
+JOIN streaming.plays p ON ps.parent_id = p.id
+ORDER BY ps.path, p.play_start_time;
+```
+
