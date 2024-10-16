@@ -188,3 +188,33 @@ JOIN streaming.plays p ON ps.parent_id = p.id
 ORDER BY ps.path, p.play_start_time;
 ```
 
+**Listing 3.10 Total play duration for every song**
+```sql
+SELECT song_id, SUM(play_duration) as total_duration
+FROM streaming.plays
+GROUP BY (song_id) ORDER BY total_duration DESC;
+```
+
+**Listing 3.11 Total play duration with users using self-join**
+```sql
+SELECT DISTINCT p.song_id,
+       p.user_id, 
+       t.total_duration
+FROM streaming.plays p
+JOIN (
+    SELECT song_id, 
+           SUM(play_duration) AS total_duration
+    FROM streaming.plays
+    GROUP BY song_id
+) t ON p.song_id = t.song_id
+ORDER BY p.song_id;
+```
+
+**Listing 3.12 Total play duration with users using window functions**
+```sql 
+SELECT DISTINCT song_id, user_id, SUM(play_duration)
+OVER (PARTITION BY song_id) as total_duration
+FROM streaming.plays ORDER BY song_id;
+```
+
+
