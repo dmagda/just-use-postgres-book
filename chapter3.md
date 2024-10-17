@@ -217,4 +217,20 @@ OVER (PARTITION BY song_id) as total_duration
 FROM streaming.plays ORDER BY song_id;
 ```
 
+**Listing 3.13 Calculating running totals and total duration**
+```sql  
+SELECT song_id, user_id, play_duration, SUM(play_duration) 
+OVER (PARTITION BY song_id ORDER BY user_id) AS total_play_duration
+FROM streaming.plays
+WHERE song_id = 2;
+```
+
+**Listing 3.14 Ranking songs by total play duration**
+```sql
+SELECT song_id, SUM(play_duration) AS total_play_duration,
+RANK() OVER (ORDER BY SUM(play_duration) DESC) AS song_rank
+FROM streaming.plays
+GROUP BY song_id
+ORDER BY song_rank;
+```
 
