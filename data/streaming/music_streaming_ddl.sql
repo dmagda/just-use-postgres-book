@@ -21,5 +21,5 @@ CREATE TABLE streaming.plays (
     song_id INT REFERENCES streaming.songs(id),
     play_start_time TIMESTAMP,
     play_duration INT, -- Duration in seconds,
-    played_after INT -- the id of the previous play or NULL if this is the first song played within the 15 minutes interval
+    played_after BIGINT -- the id of the previous play or NULL if this is the first song played within the 15 minutes interval
 );
