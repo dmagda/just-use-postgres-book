@@ -2,20 +2,7 @@
 
 Code listings for Chapter 2, Standard RDBMS Capabilities.
 
-**Listing 2.1 Creating custom databases**
-```sql
-CREATE DATABASE coffee_chain;
-CREATE DATABASE brewery;
-```
-
-**Listing 2.2 Creating custom schemas**
-```sql
-CREATE SCHEMA products;
-CREATE SCHEMA customers;
-CREATE SCHEMA sales;
-```
-
-**Listing 2.3 Creating product catalog table**
+**Listing 2.1 Creating product catalog table**
 ```sql
 CREATE TABLE products.catalog (
     id SERIAL PRIMARY KEY,
@@ -27,7 +14,7 @@ CREATE TABLE products.catalog (
 );
 ```
 
-**Listing 2.4 Creating product reviews table**
+**Listing 2.2 Creating product reviews table**
 ```sql
 CREATE TABLE products.review (
     id BIGSERIAL PRIMARY KEY,
@@ -38,7 +25,7 @@ CREATE TABLE products.review (
 );
 ```
 
-**Listing 2.5 Inserting products**
+**Listing 2.3 Inserting products**
 ```sql
 INSERT INTO products.catalog (name, description, category, price, stock_quantity)
 VALUES
@@ -49,43 +36,27 @@ VALUES
     ('Sunrise Brew Co. T-Shirt', 'A soft cotton t-shirt with the Sunrise Brew Co. logo.', 't-shirt', 19.99, 25);
 ```
 
-**Listing 2.6 Selecting products of specific category**
-```sql
-SELECT id, name, price FROM products.catalog 
-WHERE category = 'coffee';
-```
-
-**Listing 2.7 Updating product price**
-```sql
-UPDATE products.catalog SET price = 16.54 WHERE id = 1;
-```
-
-**Listing 2.8 Deleting product**
-```sql
-DELETE FROM products.catalog WHERE id = 2;
-```
-
-**Listing 2.9 Adding price constraint**
+**Listing 2.4 Adding price constraint**
 ```sql
 ALTER TABLE products.catalog 
 ADD CONSTRAINT catalog_price_check CHECK (price > 0);
 ```
 
-**Listing 2.10 Adding constraints for review table**
+**Listing 2.5 Adding constraints for review table**
 ```sql
 ALTER TABLE products.review 
 ALTER COLUMN review SET NOT NULL,
 ADD CONSTRAINT review_rank_check CHECK (rank BETWEEN 1 AND 5);
 ```
 
-**Listing 2.11 Creating foreign key on product_id**
+**Listing 2.6 Creating foreign key on product_id**
 ```sql
 ALTER TABLE products.review
 ADD CONSTRAINT products_review_product_id_fk
 FOREIGN KEY (product_id) REFERENCES products.catalog(id);
 ```
 
-**Listing 2.12 Creating customers account table**
+**Listing 2.7 Creating customers account table**
 ```sql
 CREATE TABLE customers.account (
     id SERIAL PRIMARY KEY,
@@ -95,14 +66,14 @@ CREATE TABLE customers.account (
 );
 ```
 
-**Listing 2.13 Creating foreign key on customer_id**
+**Listing 2.8 Creating foreign key on customer_id**
 ```sql
 ALTER TABLE products.review 
 ADD CONSTRAINT products_review_customer_id_fk
 FOREIGN KEY (customer_id) REFERENCES customers.account(id);
 ```
 
-**Listing 2.14 Adding new customers**
+**Listing 2.9 Adding new customers**
 ```sql
 INSERT INTO customers.account (name, email, passwd_hash)
 VALUES
@@ -111,31 +82,31 @@ VALUES
     ('Charlie Brown', 'charlie.brown@example.com', '5f4dcc3b5aa765d61d8327deb882cf99');
 ```
 
-**Listing 2.15 Posting product review**
+**Listing 2.10 Posting product review**
 ```sql
 INSERT INTO products.review (product_id, customer_id, review, rank)
 VALUES (4, 1, 'This mug is perfect — sturdy, stylish, and keeps my coffee warm for a good while.', 5);
 ```
 
-**Listing 2.16 Adding deleted column to customers table**
+**Listing 2.11 Adding deleted column to customers table**
 ```sql 
 ALTER TABLE customers.account 
 ADD COLUMN deleted boolean DEFAULT false;
 ```
 
-**Listing 2.17 Updating quantity for a single product**
+**Listing 2.12 Updating quantity for a single product**
 ```sql
 UPDATE products.catalog SET stock_quantity = stock_quantity + 100 
 WHERE id = 1;
 ```
 
-**Listing 2.18 Updating quantity for two products product**
+**Listing 2.13 Updating quantity for two products product**
 ```sql
 UPDATE products.catalog SET stock_quantity = stock_quantity + 50 
 WHERE id = 1 or id = 3;
 ```
 
-**Listing 2.19 Creating order and order_item tables**
+**Listing 2.14 Creating order and order_item tables**
 ```sql
 CREATE TABLE sales.order (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -153,7 +124,7 @@ CREATE TABLE sales.order_item (
 );
 ```
 
-**Listing 2.20 Customer buys two products**
+**Listing 2.15 Customer buys two products**
 ```sql
 BEGIN;
     
@@ -171,7 +142,7 @@ WHERE id IN (1, 4);
 COMMIT;
 ```
 
-**Listing 2.21 Reading and changing quantity for product**
+**Listing 2.16 Reading and changing quantity for product**
 ```sql
 BEGIN;
     
@@ -185,7 +156,7 @@ WHERE id = 1;
 COMMIT;
 ```
 
-**Listing 2.22 Top  three customers by order volume**
+**Listing 2.17 Top  three customers by order volume**
 ```sql
 SELECT c.name, c.id, count(*) as total_orders
 FROM customers.account c
@@ -195,7 +166,7 @@ ORDER BY total_orders DESC
 LIMIT 3;
 ```
 
-**Listing 2.23 Customers with no orders**
+**Listing 2.18 Customers with no orders**
 ```sql
 SELECT c.name
 FROM customers.account c
@@ -203,7 +174,7 @@ LEFT JOIN sales.order s ON c.id = s.customer_id
 WHERE s.customer_id IS NULL;
 ```
 
-**Listing 2.24 Products popularity**
+**Listing 2.19 Products popularity**
 ```sql
 SELECT c.name, c.category, c.price, SUM(oi.quantity) AS total_sold
 FROM products.catalog c
@@ -212,7 +183,7 @@ GROUP BY c.id
 ORDER BY total_sold DESC NULLS LAST, price DESC;
 ```
 
-**Listing 2.25 Function that returns product price**
+**Listing 2.20 Function that returns product price**
 ```sql
 CREATE OR REPLACE FUNCTION get_product_price(product_id INT)
 RETURNS NUMERIC(10, 2) AS $$
@@ -222,7 +193,7 @@ RETURNS NUMERIC(10, 2) AS $$
 $$ LANGUAGE sql;
 ```
 
-**Listing 2.26 Adding status column to the orders table**
+**Listing 2.21 Adding status column to the orders table**
 ```sql
 ALTER TABLE sales.order
 ADD COLUMN status TEXT DEFAULT 'pending' CHECK (status in ('pending','ordered'));
@@ -235,7 +206,7 @@ EXCLUDE USING btree (customer_id WITH =)
 WHERE (status = 'pending');
 ```
 
-**Listing 2.27 Implementation of order_add_item function**
+**Listing 2.22 Implementation of order_add_item function**
 ```sql
 CREATE OR REPLACE FUNCTION order_add_item(customer_id_param INT, product_id_param INT, quantity_param INT)
 RETURNS TABLE (order_id UUID, prod_id INT, quantity INT, prod_price DECIMAL) AS $$
@@ -271,7 +242,7 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-**Listing 2.28 Adding product to shopping cart**
+**Listing 2.23 Adding product to shopping cart**
 ```sql
 SELECT * FROM order_add_item(
     customer_id_param => 3,
@@ -280,7 +251,7 @@ SELECT * FROM order_add_item(
     );
 ```
 
-**Listing 2.29 Implementation of order_checkout function**
+**Listing 2.24 Implementation of order_checkout function**
 ```sql
 CREATE OR REPLACE FUNCTION order_checkout(customer_id_param INT)
 RETURNS TABLE (order_id UUID, customer_id INT, order_date timestamp, total_amount DECIMAL) AS $$
@@ -322,12 +293,7 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-**Listing 2.30  Checking out pending order**
-```sql
-SELECT * FROM order_checkout(customer_id_param => 3);
-```
-
-**Listing 2.31  Trigger function that updates order’s total amount**
+**Listing 2.25 Trigger function that updates order’s total amount**
 ```sql
 CREATE OR REPLACE FUNCTION update_order_total()
 RETURNS TRIGGER AS $$
@@ -345,7 +311,7 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-**Listing 2.32  Trigger that updates order’s total amount**
+**Listing 2.26  Trigger that updates order’s total amount**
 ```sql
 CREATE TRIGGER trigger_update_order_total
 AFTER INSERT OR UPDATE OR DELETE ON sales.order_item
@@ -353,7 +319,7 @@ FOR EACH ROW
 EXECUTE FUNCTION update_order_total();
 ```
 
-**Listing 2.33  Sales report summary**
+**Listing 2.27  Sales report summary**
 ```sql
 SELECT 
     c.name AS product_name,
@@ -366,7 +332,7 @@ GROUP BY c.id
 ORDER BY total_quantity_sold DESC, total_revenue DESC;
 ```
 
-**Listing 2.34 View for the sales report summary**
+**Listing 2.28 View for the sales report summary**
 ```sql
 CREATE VIEW product_sales_summary AS
 SELECT
@@ -380,7 +346,7 @@ GROUP BY c.id
 ORDER BY total_quantity_sold DESC, total_revenue DESC;
 ```
 
-**Listing 2.35 View for monthly sales**
+**Listing 2.29 View for monthly sales**
 ```sql
 CREATE MATERIALIZED VIEW monthly_sales_summary AS
 SELECT 
@@ -393,7 +359,7 @@ GROUP BY sales_month
 ORDER BY sales_month;
 ```
 
-**Listing 2.36 Buying two flavors of coffee**
+**Listing 2.30 Buying two flavors of coffee**
 ```sql
 SELECT order_add_item(
     customer_id_param => 3,
@@ -410,14 +376,14 @@ SELECT order_add_item(
 SELECT * FROM order_checkout(customer_id_param => 3);
 ```
 
-**Listing 2.37 Refreshing and querying materialized view**
+**Listing 2.31 Refreshing and querying materialized view**
 ```sql
 REFRESH MATERIALIZED VIEW monthly_sales_summary;
 
 SELECT * FROM monthly_sales_summary;
 ```
 
-**Listing 2.38 Creating admin-level role for coffee chain**
+**Listing 2.32 Creating admin-level role for coffee chain**
 ```sql
 CREATE ROLE coffee_chain_admin WITH LOGIN PASSWORD 'password';
 							
@@ -426,7 +392,7 @@ GRANT CONNECT ON DATABASE coffee_chain TO coffee_chain_admin;
 REVOKE CONNECT ON DATABASE coffee_chain FROM PUBLIC;
 ```
 
-**Listing 2.39 Setting up permissions for the role**
+**Listing 2.33 Setting up permissions for the role**
 ```sql
 GRANT USAGE ON SCHEMA public TO coffee_chain_admin;
 GRANT USAGE ON SCHEMA products TO coffee_chain_admin;
@@ -443,7 +409,7 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA customers TO coffee_chain_admin;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA sales TO coffee_chain_admin;
 ```
 
-**Listing 2.40 Revoking access on brewery and postgres databases**
+**Listing 2.34 Revoking access on brewery and postgres databases**
 ```sql
 REVOKE CONNECT ON DATABASE brewery FROM PUBLIC;
 REVOKE CONNECT ON DATABASE postgres FROM PUBLIC;
