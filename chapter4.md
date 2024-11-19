@@ -44,3 +44,36 @@ WHERE champion_title IN (
   'Land Warlord', 'Cyber Warlord',
   'Space Warlord');
 ```
+
+**Listing 4.6 Top gamer in each distinct region**
+```sql
+SELECT DISTINCT ON (region)
+username, region, score, win_count
+FROM game.player_stats
+ORDER BY region, score DESC, win_count DESC;
+```
+
+**Listing 4.7 Regional players with specific score and wins count**
+```sql
+SELECT username, region, score, win_count
+FROM game.player_stats
+WHERE region = 'NA' and score > 5000 and win_count > 10
+ORDER BY score DESC, win_count DESC;
+```
+
+**Listing 4.8 Creating composite index**
+```sql
+CREATE INDEX idx_region_score_win_count 
+ON game.player_stats (region, score DESC, win_count DESC);
+```
+
+**Listing 4.9 Top regional players by wins count and score**
+```sql
+SELECT DISTINCT ON (region)
+username, region, score, win_count
+FROM game.player_stats
+ORDER BY region, win_count DESC, score DESC;
+```
+
+
+
