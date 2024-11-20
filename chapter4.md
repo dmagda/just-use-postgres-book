@@ -75,5 +75,12 @@ FROM game.player_stats
 ORDER BY region, win_count DESC, score DESC;
 ```
 
+**Listing 4.10 Creating covering index**
+```sql
+CREATE INDEX idx_composite_covering_index 
+ON game.player_stats (region, score DESC, win_count DESC) INCLUDE (username);
+```
+
+
 
 
