@@ -81,6 +81,23 @@ CREATE INDEX idx_composite_covering_index
 ON game.player_stats (region, score DESC, win_count DESC) INCLUDE (username);
 ```
 
+**Listing 4.11 Querying occasional player**
+```sql
+SELECT username, play_time, score, last_active
+FROM game.player_stats
+WHERE play_time <= '50 hours'
+ORDER BY play_time;
+```
+
+**Listing 4.12 Creating partial index**
+```sql
+CREATE INDEX idx_occasional_players 
+ON game.player_stats (play_time)
+WHERE play_time <= '50 hours';
+```
+
+
+
 
 
 
