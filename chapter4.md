@@ -96,6 +96,22 @@ ON game.player_stats (play_time)
 WHERE play_time <= '50 hours';
 ```
 
+**Listing 4.13 Players list by performance margin**
+```sql
+SELECT username, win_count, loss_count, (win_count - loss_count) as margin 
+FROM game.player_stats
+WHERE (win_count - loss_count) BETWEEN 300 and 450
+ORDER BY margin DESC;
+```
+
+**Listing 4.14 Creating expression index**
+```sql
+CREATE INDEX idx_perf_margin
+ON game.player_stats ((win_count - loss_count));
+```
+
+
+
 
 
 
