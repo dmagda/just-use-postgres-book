@@ -32,21 +32,21 @@ CREATE TABLE Trade(
     buyer_id integer,
     symbol text,
     order_quantity integer,
-    bid_price float,
+    bid_price numeric(5,2),
     order_time timestamp
 );
 ```
 
 **Listing 1.5 Generating random buyers**
 ```sql
-SELECT id, floor(1 + random() * 10) AS buyer_id 
+SELECT id, random(1,10) AS buyer_id 
 FROM generate_series(1,5) AS id;
 ```
 
 **Listing 1.6 Generating random stock symbols**
 ```sql
 SELECT id, 
-(array['AAPL','F','DASH'])[floor(1 + random() * 3)] AS symbol 
+(array['AAPL','F','DASH'])[random(1,3)] AS symbol 
 FROM generate_series(1,5) AS id;
 ```
 
@@ -55,10 +55,10 @@ FROM generate_series(1,5) AS id;
 INSERT INTO trade (id, buyer_id, symbol, order_quantity, bid_price, order_time)
     SELECT
         id,
-        floor(1 + random() * 10) as buyer_id,
-        (array['AAPL','F','DASH'])[floor(1 + random() * 3)] as symbol,
-        floor(1 + random() * 20) as order_quantity,
-        round((10 + random() * 10)::numeric, 2) as bid_price,
+        random(1,10) as buyer_id,
+        (array['AAPL','F','DASH'])[random(1,3)] as symbol,
+        random(1,20) as order_quantity,
+        round(random(10.00,20.00), 2) as bid_price,
         now() as order_time
     FROM generate_series(1,1000) AS id;
 ```
