@@ -57,5 +57,10 @@ WHERE EXISTS (
 ORDER BY order_id LIMIT 5;
 ```
 
-
+**Listing 5.6 Filtering data with @> operator**
+```sql           
+SELECT count(*) 
+FROM pizzeria.order_items
+WHERE pizza @> '{"crust": "gluten_free"}';
+```
 
