@@ -64,3 +64,11 @@ FROM pizzeria.order_items
 WHERE pizza @> '{"crust": "gluten_free"}';
 ```
 
+**Listing 5.7 Accessing nested field with path expression**
+```sql             
+SELECT 
+    count(*) as total_cnt, 
+    jsonb_path_query(pizza,'$.type') as pizza_type
+FROM pizzeria.order_items
+GROUP BY pizza_type ORDER BY total_cnt DESC;
+```
