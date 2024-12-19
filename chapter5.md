@@ -64,11 +64,43 @@ FROM pizzeria.order_items
 WHERE pizza @> '{"crust": "gluten_free"}';
 ```
 
-**Listing 5.7 Accessing nested field with path expression**
+**Listing 5.7 Accessing nested fields with path expressions**
 ```sql             
 SELECT 
     count(*) as total_cnt, 
     jsonb_path_query(pizza,'$.type') as pizza_type
 FROM pizzeria.order_items
 GROUP BY pizza_type ORDER BY total_cnt DESC;
+```
+
+**Listing 5.8 Querying JSON arrays with path expressions**
+```sql           
+SELECT 
+    count(*) as total_cnt,
+    jsonb_object_keys(
+        jsonb_path_query(pizza, '$.toppings.cheese[*]')
+    ) as cheese_topping
+FROM pizzeria.order_items
+GROUP BY cheese_topping ORDER BY total_cnt DESC;
+```
+
+**Listing 5.9 Using filters within path expressions**
+```sql            
+SELECT 
+    count(*) AS total_cnt,
+    pizza->'type' as pizza_type
+FROM pizzeria.order_items
+WHERE jsonb_path_exists(pizza, '$.toppings.cheese[*] ? (exists(@.parmesan))')
+GROUP BY pizza_type
+ORDER BY total_cnt DESC;
+```
+
+**Listing 5.10 Chaining multiple filter expressions**
+```sql               
+SELECT count(*)
+FROM pizzeria.order_items
+WHERE jsonb_path_exists(
+    pizza,
+    '$ ? (@.type == "custom") .toppings.cheese[*].parmesan ? (@ == "extra")'
+);
 ```
