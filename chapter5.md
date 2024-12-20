@@ -104,3 +104,31 @@ WHERE jsonb_path_exists(
     '$ ? (@.type == "custom") .toppings.cheese[*].parmesan ? (@ == "extra")'
 );
 ```
+
+**Listing 5.11 Updating JSON fields with jsonb_set**
+```sql             
+UPDATE pizzeria.order_items 
+SET pizza = jsonb_set(pizza,'{crust}', '"regular"', false)
+WHERE order_id = 20 and order_item_id = 5;
+```
+
+**Listing 5.12 Updating JSON arrays with jsonb_set**
+```sql             
+UPDATE pizzeria.order_items 
+SET pizza = jsonb_set(
+    pizza,
+    '{toppings,veggies}',
+   '[{"tomato":"extra"}, {"spinach":"regular"}]',
+   false
+)
+WHERE order_id = 20 and order_item_id = 5;
+```
+
+**Listing 5.13 Deleting JSON fields with #- operator**
+```sql           
+UPDATE pizzeria.order_items
+SET pizza = pizza #- '{toppings,meats}'
+WHERE order_id = 20 AND order_item_id = 5;
+```
+
+
