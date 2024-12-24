@@ -131,4 +131,27 @@ SET pizza = pizza #- '{toppings,meats}'
 WHERE order_id = 20 AND order_item_id = 5;
 ```
 
+**Listing 5.14 Creating expression index on JSON field**
+```sql        
+CREATE INDEX idx_pizza_type
+ON pizzeria.order_items ((pizza ->> 'type'));
+```
+
+**Listing 5.15 Checking index details**
+```sql             
+SELECT indexname, indexdef
+FROM pg_indexes
+WHERE schemaname = 'pizzeria'
+  AND tablename = 'order_items'
+  AND indexdef LIKE '%idx_pizza_type%';
+```
+
+**Listing 5.16 Creating default GIN index**
+```sql            
+CREATE INDEX idx_pizza_orders_gin 
+ON pizzeria.order_items USING GIN(pizza);
+```
+
+
+
 
