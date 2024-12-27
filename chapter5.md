@@ -152,6 +152,25 @@ CREATE INDEX idx_pizza_orders_gin
 ON pizzeria.order_items USING GIN(pizza);
 ```
 
+**Listing 5.17 Creating GIN index with jsonb_path_ops class**
+```sql               
+CREATE INDEX idx_pizza_orders_paths_ops_gin
+ON pizzeria.order_items 
+USING GIN (pizza jsonb_path_ops);
+```
+
+**Listing 5.18 Comparing size of GIN indexes**
+```sql             
+SELECT 
+    c.relname AS index_name,
+    pg_size_pretty(pg_relation_size(c.oid)) AS index_size
+FROM pg_class c
+JOIN pg_index i ON c.oid = i.indexrelid
+WHERE c.relname IN ('idx_pizza_orders_paths_ops_gin', 'idx_pizza_orders_gin');
+```
+
+
+
 
 
 
