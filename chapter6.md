@@ -48,3 +48,11 @@ GENERATED ALWAYS AS (
     coalesce(description, ''))) STORED;
 ```
 
+**Listing 6.7 Executing first full-text search query**
+```sql
+SELECT id, name 
+FROM omdb.movies
+WHERE lexemes @@ plainto_tsquery('a computer animated film');
+```
+
+
