@@ -55,4 +55,18 @@ FROM omdb.movies
 WHERE lexemes @@ plainto_tsquery('a computer animated film');
 ```
 
+**Listing 6.8 Using combination of AND and OR operators**
+```sql
+SELECT id, name 
+FROM omdb.movies
+WHERE lexemes @@ to_tsquery('computer & animated & (lion | clownfish | donkey)');
+```
+
+**Listing 6.9 Using the NOT operator and filtering by phrase**
+```sql
+SELECT id, name 
+FROM omdb.movies
+WHERE lexemes @@ to_tsquery('lion & !''The Lion King''');
+```
+
 
