@@ -69,4 +69,13 @@ FROM omdb.movies
 WHERE lexemes @@ to_tsquery('lion & !''The Lion King''');
 ```
 
+**Listing 6.10 Returning movies containing word “ghosts”**
+```sql
+SELECT id, name, vote_average
+FROM omdb.movies
+WHERE lexemes @@ to_tsquery('ghosts')
+ORDER BY vote_average DESC NULLS LAST LIMIT 10;
+```
+
+
 
