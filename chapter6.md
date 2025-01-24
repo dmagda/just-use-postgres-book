@@ -77,5 +77,39 @@ WHERE lexemes @@ to_tsquery('ghosts')
 ORDER BY vote_average DESC NULLS LAST LIMIT 10;
 ```
 
+**Listing 6.11 Ranking search result with the ts_rank function**
+```sql
+SELECT id, name, vote_average, 
+  ts_rank(lexemes, to_tsquery('ghosts')) AS search_rank
+FROM omdb.movies
+WHERE lexemes @@ to_tsquery('ghosts')
+ORDER BY search_rank DESC, vote_average DESC NULLS LAST LIMIT 10;
+```
+
+**Listing 6.12 Assigning weights with the setweight function**
+```sql
+SELECT id, name, description,
+  (setweight(to_tsvector('english', coalesce(name, '')), 'A') || 
+  setweight(to_tsvector('english', coalesce(description, '')), 'B')) as lexemes_with_weight
+FROM omdb.movies
+WHERE id = 251;
+```
+
+**Listing 6.13 Recreating stored generated column for lexemes**
+```sql
+ALTER TABLE omdb.movies
+DROP COLUMN lexemes;
+
+ALTER TABLE omdb.movies
+ADD COLUMN lexemes tsvector 
+GENERATED ALWAYS AS (
+    setweight(to_tsvector('english', coalesce(name, '')), 'A') || 
+    setweight(to_tsvector('english', coalesce(description, '')), 'B')
+) STORED;
+```
+
+
+
+
 
 
