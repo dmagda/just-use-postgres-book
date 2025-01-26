@@ -108,6 +108,35 @@ GENERATED ALWAYS AS (
 ) STORED;
 ```
 
+**Listing 6.14 Using ts_headline to highlight search result**
+```sql
+SELECT id, name,description,
+    ts_headline(description, to_tsquery('pirates')) AS fragments,
+    ts_rank(lexemes, to_tsquery('pirates')) AS rank
+FROM omdb.movies
+WHERE lexemes @@ to_tsquery('pirates:B')
+ORDER BY rank DESC LIMIT 1;
+```
+
+**Listing 6.15 Customizing ts_headline to show additional fragments**
+```sql
+SELECT id, name, description,
+  ts_headline(description, to_tsquery('pirates'),
+  'MaxFragments=3, MinWords=5, MaxWords=10, FragmentDelimiter=<ft_end>') AS fragments,
+  ts_rank(lexemes, to_tsquery('pirates')) AS rank
+FROM omdb.movies
+WHERE lexemes @@ to_tsquery('pirates:B')
+ORDER BY rank DESC LIMIT 1;
+```
+
+**Listing 6.16 Creating GIN index over tsvector lexemes**
+```sql 
+CREATE INDEX idx_movie_lexemes_gin 
+ON omdb.movies 
+USING GIN (lexemes);
+```
+
+
 
 
 
