@@ -136,6 +136,14 @@ ON omdb.movies
 USING GIN (lexemes);
 ```
 
+**Listing 6.17 Creating GiST index over tsvector lexemes**
+```sql
+CREATE INDEX idx_movie_lexemes_gist
+ON omdb.movies 
+USING GIST (lexemes);
+```
+
+
 
 
 
