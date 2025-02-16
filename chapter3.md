@@ -139,12 +139,12 @@ while (working_table is not empty) {
 							
     // Step 8: Add the recursive result to the final result set and
     // also place it in the temporary intermediate table
-    final_result.add(intermidiate_table);
-    intermidiate_table = recursive_result;
+    final_result.add(intermediate_table);
+    intermediate_table = recursive_result;
 						
     // Step 9: Replace the working table with the contents of the intermediate
     // table
-    working_table = intermidiate_table;
+    working_table = intermediate_table;
 }					
 					
 // Step 10: Return the final result
