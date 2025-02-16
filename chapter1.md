@@ -27,7 +27,7 @@ docker exec -it postgres psql -U postgres
 
 **Listing 1.4 Creating sample table**
 ```sql
-CREATE TABLE Trade(
+CREATE TABLE trade(
     id bigint,
     buyer_id integer,
     symbol text,
