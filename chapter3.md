@@ -128,19 +128,17 @@ working_table = non_recursive_result;
 // The working table is empty when the recursive condition resolves to true
 while (working_table is not empty) {
     // Step 6: Evaluate the recursive term using current working table as input
-    recursive_result = execute(recursive_term, using=working_table);
+    intermediate_table = execute(recursive_term, using=working_table);
 							
     // Step 7: If UNION is used (not UNION ALL), discard duplicates from:
-    //    1. The recursive result itself
+    //    1. The recursive result stored in the intermediate_table
     //    2. Any rows that already exist in the final result set
     if (using UNION)
-        recursive_result = 
-            remove_duplicates(recursive_result, excluding=final_result);
+        intermediate_table = 
+            remove_duplicates(intermediate_table, excluding=final_result);
 							
-    // Step 8: Add the recursive result to the final result set and
-    // also place it in the temporary intermediate table
+    // Step 8: Add the recursive result from the intermediate table to the final result
     final_result.add(intermediate_table);
-    intermediate_table = recursive_result;
 						
     // Step 9: Replace the working table with the contents of the intermediate
     // table
