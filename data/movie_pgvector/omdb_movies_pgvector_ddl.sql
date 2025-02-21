@@ -4,7 +4,7 @@ CREATE TABLE omdb.movies (
     id BIGINT PRIMARY KEY, 
     name TEXT NOT NULL,
     description TEXT NOT NULL,
-    movie_embedding VECTOR(1536),
+    movie_embedding VECTOR(1024),
     release_date DATE, 
     runtime INT, 
     budget NUMERIC, 
@@ -15,13 +15,13 @@ CREATE TABLE omdb.movies (
 
 CREATE TABLE omdb.phrases_dictionary ( 
     phrase TEXT NOT NULL,
-    phrase_embedding VECTOR(1536)
+    phrase_embedding VECTOR(1024)
 );
 
 CREATE OR REPLACE FUNCTION get_embedding(input_phrase TEXT)
-RETURNS VECTOR(1536) AS $$
+RETURNS VECTOR(1024) AS $$
 DECLARE
-    embedding VECTOR(1536);
+    embedding VECTOR(1024);
 BEGIN
     SELECT phrase_embedding INTO embedding
     FROM omdb.phrases_dictionary
