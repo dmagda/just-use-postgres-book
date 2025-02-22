@@ -4,24 +4,36 @@ You'll find tools and samples used in Chapter 8, Postgres for AI.
 
 ## Starting Ollama
 
-1. Start Ollama in Docker:
+First, start an Ollama container in Docker using one of the commands below:
+
+* **Unix**:
     ```shell
     mkdir ~/ollama-volume
-
+    
     docker run --name ollama \
         -p 11434:11434 \
         -v ~/ollama-volume:/root/.ollama \
         -d ollama/ollama:0.5.11
     ```
 
-    Note, if this image doesn't work for any for some reason, explore [other images in Docker Hub](https://hub.docker.com/r/ollama/ollama).
+* **Windows**, run this command in PowerShell instead:
+    ```shell
+    mkdir ~/ollama-volume
+    
+    docker run --name ollama `
+        -p 11434:11434 `
+        -v ${PWD}/ollama-volume:/root/.ollama `
+        -d ollama/ollama:0.5.11
+    ```
 
-2. Download the [mxbai-embed-large:335m](https://ollama.com/library/mxbai-embed-large:335m) embedding model:
+Next, deploy the following models:
+
+* Download the [mxbai-embed-large:335m](https://ollama.com/library/mxbai-embed-large:335m) embedding model:
     ```shell
     docker exec -it ollama ollama pull mxbai-embed-large:335m
     ```
 
-3. Download and run the [tinyllama](https://ollama.com/library/tinyllama) LLM:
+* Download and run the [tinyllama](https://ollama.com/library/tinyllama) LLM:
     ```shell
     docker exec -it ollama ollama pull tinyllama
     ```
