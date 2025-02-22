@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS vector;
+
 CREATE SCHEMA omdb;
 
 CREATE TABLE omdb.movies (
