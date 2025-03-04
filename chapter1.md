@@ -4,6 +4,8 @@ Code listings for the Chapter 1, Meeting Postgres.
 
 **Listing 1.1 Starting Postgres container on Unix**
 ```shell
+mkdir ~/postgres-volume
+
 docker run --name postgres \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
     -p 5432:5432 \
