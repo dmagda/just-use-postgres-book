@@ -26,6 +26,27 @@ SELECT * FROM pg_available_extensions
 WHERE name = 'vector';
 ```
 
+**Listing 8.4 Pseudo-code for generating movie embeddings**
+```javascript
+# Fetch all movies from the database
+movies = database.execute("SELECT id, name, description FROM omdb.movies")
+
+# Iterate over each movie and generate the embedding
+for each movie in movies:
+    id = movie.id
+    name = movie.name
+    description = movie.description
+    
+    # Combine name and description for embedding
+    combined_text = name + " " + description
+    
+    # Generate embedding using the model
+    embedding = embedding_model.generate_embedding(combined_text)
+    
+    # Update the database with the generated embedding
+    database.execute("
+        UPDATE omdb.movies SET movie_embedding = ? WHERE id = ?", embedding, id)
+```
 
 Preload sample data:
 ```shell
