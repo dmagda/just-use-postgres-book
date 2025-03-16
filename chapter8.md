@@ -60,3 +60,10 @@ for each movie in movies:
         UPDATE omdb.movies SET movie_embedding = ? WHERE id = ?", embedding, id)
 ```
 
+**Listing 8.5 Performing vector similarity search with cosine distance**
+```sql
+SELECT id, name, description
+FROM omdb.movies
+ORDER BY movie_embedding <=> get_embedding('May the force be with you')
+LIMIT 3;
+```
