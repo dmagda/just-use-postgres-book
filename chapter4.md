@@ -2,6 +2,14 @@
 
 Code listings for the Chapter 4, Indexes.
 
+**Preload sample dataset**
+```shell
+docker cp data/gaming/. postgres:/home/.
+
+docker exec -it postgres psql -U postgres -c "\i /home/gaming_ddl.sql"
+docker exec -it postgres psql -U postgres -c "\i /home/gaming_data.sql"
+```
+
 **Listing 4.1 Primary Index Details**
 ```sql
 SELECT indexname, indexdef

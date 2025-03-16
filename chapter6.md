@@ -2,6 +2,14 @@
 
 Code listings for Chapter 6, Full-Text Search.
 
+**Preload sample dataset**
+```shell
+docker cp data/movie/. postgres:/home/.
+
+docker exec -it postgres psql -U postgres -c "\i /home/omdb_movies_ddl.sql"
+docker exec -it postgres psql -U postgres -c "\i /home/omdb_movies_data.sql"
+```
+
 **Listing 6.1 Analyzing tokenization and normalization with ts_debug**
 ```sql
 SELECT token, description, lexemes, dictionary

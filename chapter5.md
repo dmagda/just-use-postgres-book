@@ -2,6 +2,14 @@
 
 Code listings for the Chapter 5, JSON.
 
+**Preload sample dataset**
+```shell
+docker cp data/pizzeria/. postgres:/home/.
+
+docker exec -it postgres psql -U postgres -c "\i /home/pizzeria_ddl.sql"
+docker exec -it postgres psql -U postgres -c "\i /home/pizzeria_data.sql"
+```
+
 **Listing 5.1 Extracting Pizza Size and Crust Type**       
 ```sql                                                           
 SELECT

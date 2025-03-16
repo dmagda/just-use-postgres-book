@@ -1,4 +1,16 @@
-# Chapter 8, Postgres for AI
+# Chapter 8, Postgres for generative AI
+
+Code listings for Chapter 8, Postgres for generative AI.
+
+**Preload sample dataset**
+Note, if the Postgres container with the pgvector is not yet started on your end, then do this first using one of the following listings.
+```shell
+docker cp data/movie_pgvector/. postgres-pgvector:/home/.
+
+docker exec -it postgres-pgvector psql -U postgres -c "\i /home/omdb_movies_ddl.sql"
+docker exec -it postgres-pgvector psql -U postgres -c "\i /home/omdb_movies_data.sql"
+docker exec -it postgres-pgvector psql -U postgres -c "\i /home/movies_phrases_data.sql"
+```
 
 **Listing 8.1 Starting Postgres with pgvector on Unix**
 ```shell
@@ -48,13 +60,3 @@ for each movie in movies:
         UPDATE omdb.movies SET movie_embedding = ? WHERE id = ?", embedding, id)
 ```
 
-Preload sample data:
-```shell
-docker cp data/movie_pgvector/omdb_movies_pgvector_ddl.sql postgres-pgvector:/home/.
-docker cp data/movie_pgvector/omdb_movies_pgvector_data.sql postgres-pgvector:/home/.
-docker cp data/movie_pgvector/omdb_movies_pgvector_phrases_data.sql postgres-pgvector:/home/.
-
-docker exec -it postgres-pgvector psql -U postgres -c "\i /home/omdb_movies_pgvector_ddl.sql"
-docker exec -it postgres-pgvector psql -U postgres -c "\i /home/omdb_movies_pgvector_data.sql"
-docker exec -it postgres-pgvector psql -U postgres -c "\i /home/omdb_movies_pgvector_phrases_data.sql"
-```

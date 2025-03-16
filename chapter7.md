@@ -1,5 +1,7 @@
 # Chapter 7, Postgres extensions
 
+Code listings for Chapter 7, Postgres extensions.
+
 **Listing 7.1 Checking pgcrypto extension version**
 ```sql
 SELECT name, default_version, installed_version 
