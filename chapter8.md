@@ -3,6 +3,7 @@
 Code listings for Chapter 8, Postgres for generative AI.
 
 **Preload sample dataset**
+
 Note, if the Postgres container with the pgvector is not yet started on your end, then do this first using one of the following listings.
 ```shell
 docker cp data/movie_pgvector/. postgres-pgvector:/home/.
