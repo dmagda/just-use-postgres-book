@@ -68,3 +68,24 @@ FROM omdb.movies
 ORDER BY movie_embedding <=> get_embedding('May the force be with you')
 LIMIT 3;
 ```
+
+**Listing 8.6 Adding cosine distance to query output**
+```sql
+WITH phrase AS (
+  SELECT get_embedding('May the force be with you') AS embedding
+)
+SELECT id, name, description, m.movie_embedding <=> p.embedding AS distance
+FROM omdb.movies m CROSS JOIN phrase p
+ORDER BY distance LIMIT 3;
+```
+
+**Listing 8.7 Changing the search phrase to improve the result accuracy**
+```sql
+WITH phrase AS (
+  SELECT get_embedding(
+    'A movie about a Jedi who fights against the dark side of the force') AS embedding
+)
+SELECT id, name, description, m.movie_embedding <=> p.embedding AS distance
+FROM omdb.movies m CROSS JOIN phrase p
+ORDER BY distance LIMIT 3;
+```
