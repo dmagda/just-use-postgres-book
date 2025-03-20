@@ -89,3 +89,12 @@ SELECT id, name, description, m.movie_embedding <=> p.embedding AS distance
 FROM omdb.movies m CROSS JOIN phrase p
 ORDER BY distance LIMIT 3;
 ```
+
+**Listing 8.8 Execution plan for similarity search query**
+```sql
+EXPLAIN (analyze, costs off)
+SELECT id, name, description
+FROM omdb.movies
+ORDER BY movie_embedding <=> get_embedding('May the force be with you') 
+LIMIT 3;
+```
