@@ -98,3 +98,42 @@ FROM omdb.movies
 ORDER BY movie_embedding <=> get_embedding('May the force be with you') 
 LIMIT 3;
 ```
+
+**Listing 8.9 Creating IVFFlat index**
+```sql
+CREATE INDEX movie_embeddings_ivfflat_idx 
+ON omdb.movies 
+USING ivfflat (movie_embedding vector_cosine_ops) WITH (lists = 5);
+```
+
+**Listing 8.10 Creating IVFFlat index**
+```sql 
+EXPLAIN (analyze, costs off)
+SELECT id, name, description
+FROM omdb.movies
+ORDER BY movie_embedding <=> 
+    (SELECT phrase_embedding
+    FROM omdb.phrases_dictionary
+    WHERE phrase = 'May the force be with you')
+LIMIT 3;
+```
+
+**Listing 8.11 Increasing number of probes for IVFFlat index**
+```sql
+BEGIN;
+
+SET LOCAL ivfflat.probes = 2;
+
+SELECT id, name
+FROM omdb.movies
+ORDER BY movie_embedding <=> 
+    (SELECT phrase_embedding
+    FROM omdb.phrases_dictionary
+    WHERE phrase = 'May the force be with you')
+LIMIT 3;
+
+COMMIT;
+```
+
+
+
