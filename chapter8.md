@@ -135,5 +135,13 @@ LIMIT 3;
 COMMIT;
 ```
 
+**Listing 8.12 Creating HNSW index**
+```sql 
+CREATE INDEX movie_embeddings_hnsw_idx 
+ON omdb.movies 
+USING hnsw (movie_embedding vector_cosine_ops)
+WITH (m = 8, ef_construction = 32);
+```
+
 
 
