@@ -143,5 +143,17 @@ USING hnsw (movie_embedding vector_cosine_ops)
 WITH (m = 8, ef_construction = 32);
 ```
 
+**Listing 8.13 Checking execution plan with HNSW index**
+```sql 
+EXPLAIN (analyze, costs off)
+SELECT id, name
+FROM omdb.movies
+ORDER BY movie_embedding <=> 
+    (SELECT phrase_embedding
+    FROM omdb.phrases_dictionary
+    WHERE phrase = 'May the force be with you')
+LIMIT 3;
+```
+
 
 
