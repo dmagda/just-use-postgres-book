@@ -155,5 +155,22 @@ ORDER BY movie_embedding <=>
 LIMIT 3;
 ```
 
+**Listing 8.14 Improving search accuracy with HNSW**
+```sql
+BEGIN;
+SET LOCAL hnsw.ef_search = 50;
+
+SELECT id, name
+FROM omdb.movies
+ORDER BY movie_embedding <=> 
+    (SELECT phrase_embedding
+    FROM omdb.phrases_dictionary
+    WHERE phrase = 'A pirate captain who sails the seven seas in search of treasure')
+LIMIT 3;
+
+COMMIT;
+```
+
+
 
 
