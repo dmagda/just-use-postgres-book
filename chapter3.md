@@ -118,7 +118,8 @@ JOIN current_play_duration cp ON up.song_id = cp.song_id;
 
 **Listing 3.7 Recursive query execution flow in pseudo-code**
 ```javascript
-// Step 1: Evaluate the non-recursive term
+// Step 1: Evaluate the non-recursive term, which is a SQL query defined 
+// at the beginning of the recursive CTE and executed only once.
 non_recursive_result = execute(non_recursive_term); 
 						
 // Step 2: Remove duplicates, if UNION is used
@@ -135,7 +136,9 @@ working_table = non_recursive_result;
 // Step 5: Execute the recursive term until the working table is not empty
 // The working table is empty when the recursive condition resolves to true
 while (working_table is not empty) {
-    // Step 6: Evaluate the recursive term using current working table as input
+    // Step 6: Evaluate the recursive term using the current working table as input.
+    // The recursive term is the SQL query defined in the recursive CTE
+    // after the UNION clause.
     intermediate_table = execute(recursive_term, using=working_table);
 							
     // Step 7: If UNION is used (not UNION ALL), discard duplicates from:
@@ -218,9 +221,15 @@ ORDER BY p.song_id;
 
 **Listing 3.12 Total play duration with users using window functions**
 ```sql 
-SELECT DISTINCT song_id, user_id, SUM(play_duration)
-OVER (PARTITION BY song_id) as total_duration
-FROM streaming.plays ORDER BY song_id;
+WITH plays_with_total AS (
+  SELECT 
+    song_id, user_id, SUM(play_duration) 
+    OVER (PARTITION BY song_id) AS total_duration
+  FROM streaming.plays
+)
+SELECT DISTINCT song_id, user_id, total_duration
+FROM plays_with_total
+ORDER BY song_id, user_id;
 ```
 
 **Listing 3.13 Calculating running totals and total duration**
