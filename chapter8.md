@@ -165,7 +165,7 @@ FROM omdb.movies
 ORDER BY movie_embedding <=> 
     (SELECT phrase_embedding
     FROM omdb.phrases_dictionary
-    WHERE phrase = 'A pirate captain who sails the seven seas in search of treasure')
+    WHERE phrase = 'A movie about a Jedi who fights against the dark side of the force')
 LIMIT 3;
 
 COMMIT;
