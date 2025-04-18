@@ -27,3 +27,28 @@ docker run --name postgres-timescaledb `
 SELECT * FROM pg_available_extensions
 WHERE name = 'timescaledb';
 ```
+
+**Prealoading dataset**
+```shell
+docker cp data/smartwatch/. postgres-timescaledb:/home/.
+
+docker exec -it postgres-timescaledb psql -U postgres -c "\i /home/smartwatch_ddl.sql"
+docker exec -it postgres-timescaledb psql -U postgres -c "\i /home/smartwatch_data.sql"
+```
+
+**Listing 9.4 Number of measurements per user device**
+```sql
+SELECT watch_id, count(*) as total_measurements
+FROM watch.heart_rate_measurements
+GROUP BY watch_id ORDER BY watch_id;
+```
+
+**Listing 9.5 Time-series sequence for a specific period**
+```sql
+SELECT watch_id, recorded_at, heart_rate, activity
+FROM watch.heart_rate_measurements
+WHERE watch_id = 1 AND
+  recorded_at BETWEEN '2025-01-01 06:50:00' AND '2025-01-01 06:55:00'
+ORDER BY recorded_at;
+```
+
