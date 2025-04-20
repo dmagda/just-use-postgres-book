@@ -8,8 +8,7 @@ CREATE TABLE watch.heart_rate_measurements (
 );
 
 SELECT create_hypertable(
-  'watch.heart_rate_measurements',
-  'recorded_at',
-  chunk_time_interval => interval '1 month',
+  relation => 'watch.heart_rate_measurements',
+  dimension => by_range('recorded_at', interval '1 month'),
   create_default_indexes => false
 );
