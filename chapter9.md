@@ -52,3 +52,56 @@ WHERE watch_id = 1 AND
 ORDER BY recorded_at;
 ```
 
+**Listing 9.6 Calculating average and max heart rates during workouts**
+```sql
+SELECT
+  time_bucket('10 minutes', recorded_at) AS period, activity,
+  AVG(heart_rate)::int AS avg_rate, MAX (heart_rate)::int AS max_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id = 1 AND activity = 'workout' 
+  AND recorded_at >= '2025-04-23' AND recorded_at < '2025-04-24'
+GROUP BY period, activity ORDER BY period;
+```
+
+**Listing 9.7 Calculating weekly summary for every type of activity**
+```sql
+SELECT
+  time_bucket('1 week', recorded_at) AS period, activity,
+  AVG(heart_rate)::int AS avg_rate, 
+  MAX (heart_rate)::int AS max_rate, MIN (heart_rate)::int AS min_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id = 1 AND recorded_at >= '2025-04-01' AND recorded_at < '2025-04-15'
+GROUP BY period, activity ORDER BY period, activity;
+```
+
+**Listing 9.8 Changing time origin for the weekly summary**
+```sql
+SELECT
+  time_bucket('1 week', recorded_at, '2025-04-01'::timestamptz) AS period, activity,
+  AVG(heart_rate)::int AS avg_rate, 
+  MAX (heart_rate)::int AS max_rate, MIN (heart_rate)::int AS min_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id = 1 AND recorded_at >= '2025-04-01' AND recorded_at < '2025-04-15'
+GROUP BY period, activity ORDER BY period, activity;
+```
+
+**Listing 9.9 Setting user specific time zone for calculation and output**
+```sql
+BEGIN;
+
+SET LOCAL time zone 'Asia/Tokyo';
+
+SELECT
+  time_bucket('1 week', recorded_at, 'Asia/Tokyo', '2025-04-01'::timestamptz) AS period, activity,
+  AVG(heart_rate)::int AS avg_rate, 
+  MAX (heart_rate)::int AS max_rate, MIN (heart_rate)::int AS min_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id = 2 AND recorded_at >= '2025-04-01' AND recorded_at < '2025-04-15'
+GROUP BY period, activity ORDER BY period, activity;
+
+COMMIT;
+```
+
+
+
+
