@@ -102,6 +102,45 @@ GROUP BY period, activity ORDER BY period, activity;
 COMMIT;
 ```
 
+**Listing 9.10 Observing gaps in time buckets**
+```sql
+SELECT watch_id, time_bucket('1 minute', recorded_at) AS minute,
+    AVG(heart_rate)::int AS avg_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id=1 AND recorded_at BETWEEN '2025-03-02 07:25' AND '2025-03-02 07:36'
+GROUP BY watch_id, minute ORDER BY minute;
+```
+
+**Listing 9.11 Adding gaps to time buckets**
+```sql
+SELECT watch_id, time_bucket_gapfill('1 minute', recorded_at) AS minute,
+    AVG(heart_rate)::int AS avg_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id=1 AND recorded_at BETWEEN '2025-03-02 07:25' AND '2025-03-02 07:36'
+GROUP BY watch_id, minute ORDER BY minute;
+```
+
+**Listing 9.12 Filling gaps with LOCF function**
+```sql
+SELECT watch_id, time_bucket_gapfill('1 minute', recorded_at) AS minute,
+    LOCF(AVG(heart_rate)::int) AS avg_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id=1 AND recorded_at BETWEEN '2025-03-02 07:25' AND '2025-03-02 07:36'
+GROUP BY watch_id, minute ORDER BY minute;
+```
+
+**Listing 9.13 Filling gaps with interpolate function**
+```sql
+SELECT watch_id, time_bucket_gapfill('1 minute', recorded_at) AS minute,
+    interpolate(AVG(heart_rate)::int) AS avg_rate
+FROM watch.heart_rate_measurements
+WHERE watch_id=1 AND recorded_at BETWEEN '2025-03-02 07:25' AND '2025-03-02 07:36'
+GROUP BY watch_id, minute ORDER BY minute;
+```
+
+
+
+
 
 
 
