@@ -138,7 +138,19 @@ WHERE watch_id=1 AND recorded_at BETWEEN '2025-03-02 07:25' AND '2025-03-02 07:3
 GROUP BY watch_id, minute ORDER BY minute;
 ```
 
-
+**Listing 9.14 Creating continuous aggregate**
+```sql
+CREATE MATERIALIZED VIEW watch.low_heart_rate_count_per_5min
+WITH (timescaledb.continuous) AS
+SELECT
+  watch_id,
+  time_bucket('5 minutes', recorded_at) AS bucket,
+  MIN(heart_rate) as min_rate,
+  COUNT(*) FILTER (WHERE heart_rate < 50) AS low_rate_count,
+  COUNT(*) AS total_measurements
+FROM watch.heart_rate_measurements
+GROUP BY watch_id, bucket;
+```
 
 
 
