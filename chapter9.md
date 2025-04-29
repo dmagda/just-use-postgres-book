@@ -152,6 +152,56 @@ FROM watch.heart_rate_measurements
 GROUP BY watch_id, bucket;
 ```
 
+**Listing 9.15 Querying continuous aggregate**
+```sql
+SELECT 
+  bucket, low_rate_count, 
+  (low_rate_count >= 5) AS bradycardia_detected
+FROM watch.low_heart_rate_count_per_5min
+WHERE bucket = '2025-11-30 02:35' AND watch_id = 3;
+```
+
+**Listing 9.16 Getting data for 15 minutes window**
+```sql
+SELECT 
+  bucket, low_rate_count, 
+  (low_rate_count >= 5) AS bradycardia_detected
+FROM watch.low_heart_rate_count_per_5min
+WHERE bucket BETWEEN '2025-11-30 02:35' AND '2025-11-30 02:45' AND watch_id = 3
+ORDER BY bucket;
+```
+
+**Listing 9.17 Getting data for 15 minutes window**
+```sql
+INSERT INTO watch.heart_rate_measurements 
+(watch_id, recorded_at, heart_rate, activity) VALUES
+(3, '2025-12-01 00:45:00+00', 48, 'sleeping'),
+(3, '2025-12-01 00:46:00+00', 46, 'sleeping'),
+(3, '2025-12-01 00:47:00+00', 44, 'sleeping'),
+(3, '2025-12-01 00:47:30+00', 47, 'sleeping'),
+(3, '2025-12-01 00:48:00+00', 48, 'sleeping'),
+(3, '2025-12-01 00:48:30+00', 45, 'sleeping'),
+(3, '2025-12-01 00:49:00+00', 43, 'sleeping');
+```
+
+**Listing 9.18 Defining refresh policy for continuous aggregate**
+```sql
+SELECT add_continuous_aggregate_policy('watch.low_heart_rate_count_per_5min',
+  start_offset => INTERVAL '15 minutes',
+  end_offset => INTERVAL '1 minute',
+  schedule_interval => INTERVAL '1 minute');
+```
+
+**Listing 9.19 Refreshing aggregate manually**
+```sql
+CALL refresh_continuous_aggregate('watch.low_heart_rate_count_per_5min',
+    '2025-12-01 00:45:00+00', '2025-12-01 00:50:00+00');
+```
+
+
+
+
+
 
 
 
