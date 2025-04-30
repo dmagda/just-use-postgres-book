@@ -198,6 +198,27 @@ CALL refresh_continuous_aggregate('watch.low_heart_rate_count_per_5min',
     '2025-12-01 00:45:00+00', '2025-12-01 00:50:00+00');
 ```
 
+**Listing 9.20 Checking existing indexes on table**
+```sql
+SELECT indexname, indexdef
+FROM pg_indexes
+WHERE schemaname = 'watch' AND tablename = 'heart_rate_measurements';
+```
+
+**Listing 9.21 Calculating average heart rate during walking**
+```sql
+SELECT 
+  time_bucket('1 hour', recorded_at) AS period,
+  AVG(heart_rate)::int AS avg_rate
+FROM watch.heart_rate_measurements
+WHERE activity = 'walking' AND watch_id = 1
+  AND recorded_at >= '2025-03-15 00:00' 
+  AND recorded_at < '2025-03-16 00:00'
+GROUP BY period ORDER BY period;
+```
+
+
+
 
 
 
