@@ -217,6 +217,22 @@ WHERE activity = 'walking' AND watch_id = 1
 GROUP BY period ORDER BY period;
 ```
 
+**Listing 9.22 Creating composite index**
+```sql
+CREATE INDEX heart_rate_btree_idx
+ON watch.heart_rate_measurements (recorded_at, watch_id);
+```
+
+**Listing 9.23 Checking indexes created on partitions**
+```sql
+SELECT indexname, indexdef
+FROM pg_indexes
+WHERE schemaname = '_timescaledb_internal'
+  AND tablename LIKE '_hyper_1\_%_chunk' ESCAPE '\';
+```
+
+
+
 
 
 
