@@ -231,6 +231,14 @@ WHERE schemaname = '_timescaledb_internal'
   AND tablename LIKE '_hyper_1\_%_chunk' ESCAPE '\';
 ```
 
+**Listing 9.24 Creating BRIN index**
+```sql
+CREATE INDEX heart_rate_brin_idx
+ON watch.heart_rate_measurements
+USING brin (recorded_at);
+```
+
+
 
 
 
