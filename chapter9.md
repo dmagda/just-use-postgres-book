@@ -238,6 +238,33 @@ ON watch.heart_rate_measurements
 USING brin (recorded_at);
 ```
 
+**Listing 9.25 Comparing size of B-tree and BRIN indexes**
+```sql
+SELECT
+  i.indexrelid::regclass AS index_name,
+  pg_size_pretty(pg_relation_size(i.indexrelid)) AS index_size
+FROM timescaledb_information.chunks c
+JOIN pg_index i
+  ON i.indrelid = format('%I.%I', c.chunk_schema, c.chunk_name)::regclass
+WHERE c.hypertable_name = 'heart_rate_measurements'
+ORDER BY index_name;
+```
+
+**Listing 9.26 Execution plan for average sleeping heart rate calculation**
+```sql
+EXPLAIN (analyze, costs off)
+SELECT 
+  time_bucket('1 hour', recorded_at) AS period,
+  AVG(heart_rate)::int AS avg_rate
+FROM watch.heart_rate_measurements
+WHERE activity = 'sleeping'
+  AND recorded_at >= '2025-03-15 00:00' 
+  AND recorded_at < '2025-03-16 00:00'
+GROUP BY period ORDER BY period;
+```
+
+
+
 
 
 
