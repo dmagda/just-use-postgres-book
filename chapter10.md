@@ -39,3 +39,34 @@ SELECT * FROM pg_available_extensions
 WHERE name = 'postgis';
 ```
 
+**Listing 10.5 Preloading OSM dataset on Unix**
+```shell
+mkdir ~/osm2pgsql-volume
+
+docker run --name osm2pgsql --network="host" \
+ -e PGPASSWORD=password \
+ -v ~/osm2pgsql-volume:/data \
+ iboates/osm2pgsql:2.1.1 \
+ -H 127.0.0.1 -P 5432 -d postgres -U postgres --schema florida \
+ https://download.geofabrik.de/north-america/us/florida-250513.osm.pbf
+```
+
+**Listing 10.6 Preloading OSM dataset on Windows**
+```shell
+docker run --name osm2pgsql --network="host" `
+ -e PGPASSWORD=password `
+ -v ${PWD}:/data `
+ iboates/osm2pgsql:2.1.1 `
+ -H 127.0.0.1 -P 5432 -d postgres -U postgres --schema florida `
+ https://download.geofabrik.de/north-america/us/florida-250513.osm.pbf
+```
+
+**Listing 10.7 Listing tables created for dataset**
+```sql
+SELECT tablename
+FROM pg_catalog.pg_tables
+WHERE schemaname = 'florida';
+```
+
+
+
