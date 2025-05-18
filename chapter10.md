@@ -68,5 +68,31 @@ FROM pg_catalog.pg_tables
 WHERE schemaname = 'florida';
 ```
 
+**Listing 10.8 Getting coordinates for three stores**
+```sql
+SELECT name, shop, way as WKB, ST_AsText(way) as WKT
+FROM florida.planet_osm_point
+WHERE name = 'Whole Foods Market' LIMIT 3;
+```
+
+**Listing 10.9 Getting shortest named ways**
+```sql
+SELECT name, ST_AsText(way)
+FROM florida.planet_osm_line 
+WHERE name IS NOT NULL
+ORDER BY ST_Length(way) ASC LIMIT 3;
+```
+
+**Listing 10.10 Getting shortest named regions**
+```sql
+SELECT name, ST_AsText(way)
+FROM florida.planet_osm_polygon 
+WHERE name IS NOT NULL
+ORDER BY ST_Area(way) ASC LIMIT 3;
+```
+
+
+
+
 
 
