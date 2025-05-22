@@ -91,6 +91,35 @@ WHERE name IS NOT NULL
 ORDER BY ST_Area(way) ASC LIMIT 3;
 ```
 
+**Listing 10.11 Searching for center of Tampa**
+```sql
+SELECT name, ST_AsText(way) AS coordinates
+FROM florida.planet_osm_point
+WHERE name = 'Tampa' and place = 'city';
+```
+
+**Listing 10.12 Transforming coordinates to latitude and longitude**
+```sql
+SELECT name, ST_AsText(ST_Transform(way, 4326)) AS coordinates 
+FROM florida.planet_osm_point
+WHERE name = 'Tampa' and place = 'city';
+```
+
+**Listing 10.13 Generating URL for OpenStreetMaps**
+```sql
+WITH tampa_city_point AS (
+  SELECT ST_Transform(way, 4326) AS coordinate
+  FROM florida.planet_osm_point
+  WHERE name = 'Tampa' AND place = 'city'
+)
+SELECT 'https://www.openstreetmap.org/?mlat=' || ST_Y(coordinate) 
+  || '&mlon=' || ST_X(coordinate) || '#map=12' AS osm_url
+FROM tampa_city_point;
+```
+
+
+
+
 
 
 
