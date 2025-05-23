@@ -117,6 +117,38 @@ SELECT 'https://www.openstreetmap.org/?mlat=' || ST_Y(coordinate)
 FROM tampa_city_point;
 ```
 
+**Listing 10.14 Finding closest restaurants**
+```sql
+WITH roost_hotel AS (
+  SELECT way FROM florida.planet_osm_point
+  WHERE name = 'Roost Apartment Hotel' AND tourism='hotel'
+)
+SELECT p.name, amenity,
+  ST_Distance(h.way,p.way) as distance_meters,
+  ST_Distance(h.way,p.way) * 3.28 as distance_feet
+FROM roost_hotel as h 
+JOIN florida.planet_osm_point AS p
+  ON ST_DWithin(h.way, p.way, 500)
+WHERE p.amenity = 'restaurant'
+ORDER BY distance_meters LIMIT 5;
+```
+
+**Listing 10.15 Finding restaurants closest to created point**
+```sql 
+WITH roost_hotel AS (
+  SELECT ST_SetSRID(
+    ST_MakePoint(-9178356.224987695, 3242002.0503882724), 3857) as point
+)
+SELECT p.name, amenity,
+  ST_Distance(h.point,p.way) as distance_meters,
+  ST_Distance(h.point,p.way) * 3.28 as distance_feet
+FROM roost_hotel as h 
+JOIN florida.planet_osm_point AS p
+  ON ST_DWithin(h.point, p.way, 500)
+WHERE p.amenity = 'restaurant'
+ORDER BY distance_meters LIMIT 5;
+```
+
 
 
 
