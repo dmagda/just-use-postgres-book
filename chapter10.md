@@ -133,7 +133,7 @@ WHERE p.amenity = 'restaurant'
 ORDER BY distance_meters LIMIT 5;
 ```
 
-**Listing 10.15 Finding restaurants closest to created point**
+**Listing 10.15 Finding nearest restaurants to provided coordinates**
 ```sql 
 WITH roost_hotel AS (
   SELECT ST_SetSRID(
@@ -149,7 +149,36 @@ WHERE p.amenity = 'restaurant'
 ORDER BY distance_meters LIMIT 5;
 ```
 
+**Listing 10.16 Finding polygon and number of points it’s made of**
+```sql 
+SELECT name, tourism, ST_NPoints(way)
+FROM florida.planet_osm_polygon
+WHERE name = 'Walt Disney World';
+```
 
+**Listing 10.17 Calculating area of Walt Disney World**
+```sql
+SELECT name, tourism,
+  ST_Area(way) / 1000000.0 AS area_sq_km,
+  ST_Area(way) / 4046.86 AS area_acres
+FROM florida.planet_osm_polygon
+WHERE name = 'Walt Disney World';
+```
+
+**Listing 10.18 Finding distinct parks within Walt Disney World**
+```sql
+WITH disney_world AS (
+  SELECT way AS boundaries
+  FROM florida.planet_osm_polygon
+  WHERE name = 'Walt Disney World'
+)
+SELECT name, tourism
+FROM florida.planet_osm_polygon AS p
+JOIN disney_world AS d ON ST_Within(p.way, d.boundaries)
+WHERE p.name IS NOT NULL 
+  AND p.tourism = 'theme_park'
+  AND NOT ST_Equals(p.way, d.boundaries);
+```
 
 
 
