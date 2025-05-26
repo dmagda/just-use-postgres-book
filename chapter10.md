@@ -123,7 +123,7 @@ WITH roost_hotel AS (
   SELECT way FROM florida.planet_osm_point
   WHERE name = 'Roost Apartment Hotel' AND tourism='hotel'
 )
-SELECT p.name, amenity,
+SELECT p.name, p.amenity,
   ST_Distance(h.way,p.way) as distance_meters,
   ST_Distance(h.way,p.way) * 3.28 as distance_feet
 FROM roost_hotel as h 
@@ -139,7 +139,7 @@ WITH roost_hotel AS (
   SELECT ST_SetSRID(
     ST_MakePoint(-9178356.224987695, 3242002.0503882724), 3857) as point
 )
-SELECT p.name, amenity,
+SELECT p.name, p.amenity,
   ST_Distance(h.point,p.way) as distance_meters,
   ST_Distance(h.point,p.way) * 3.28 as distance_feet
 FROM roost_hotel as h 
@@ -172,13 +172,68 @@ WITH disney_world AS (
   FROM florida.planet_osm_polygon
   WHERE name = 'Walt Disney World'
 )
-SELECT name, tourism
+SELECT p.name, p.tourism
 FROM florida.planet_osm_polygon AS p
 JOIN disney_world AS d ON ST_Within(p.way, d.boundaries)
 WHERE p.name IS NOT NULL 
   AND p.tourism = 'theme_park'
   AND NOT ST_Equals(p.way, d.boundaries);
 ```
+
+**Listing 10.19 Finding attractions within Disney’s Hollywood Studios**
+```sql
+WITH disney_world AS (
+  SELECT way AS boundaries 
+  FROM florida.planet_osm_polygon
+  WHERE name = 'Disney''s Hollywood Studios'
+)
+SELECT p.name, p.tourism
+FROM florida.planet_osm_polygon AS p
+JOIN disney_world AS d ON ST_Within(p.way, d.boundaries)
+WHERE p.name is NOT NULL AND p.tourism = 'attraction';
+```
+
+**Listing 10.20 Finding all amenities within Disney's Hollywood Studios**
+```sql  
+WITH disney_world AS (
+  SELECT way AS boundaries 
+  FROM florida.planet_osm_polygon
+  WHERE name = 'Disney''s Hollywood Studios'
+)
+SELECT p.name, p.amenity
+FROM florida.planet_osm_point AS p
+JOIN disney_world AS d ON ST_Within(p.way, d.boundaries)
+WHERE p.name IS NOT NULL AND p.amenity IS NOT NULL;
+```
+
+**Listing 10.21 Finding top ten types of roads**
+```sql  
+SELECT highway, count(highway) AS total_count
+FROM florida.planet_osm_line
+WHERE highway IS NOT NULL
+GROUP BY highway ORDER BY total_count DESC LIMIT 10;
+```
+
+**Listing 10.22 Finding top ten roads within or crossing Miami**
+```sql  
+WITH miami AS (
+  SELECT way AS boundaries
+  FROM florida.planet_osm_polygon
+  WHERE name = 'Miami' AND place = 'city'
+)
+SELECT l.name, l.highway, 
+  ST_NPoints(l.way) AS points_number,
+  ROUND(ST_Length(l.way)) AS length_meters,
+  ROUND(ST_Length(l.way) * 3.28084) AS length_feet
+FROM florida.planet_osm_line l
+JOIN miami m ON ST_Intersects(l.way, m.boundaries)  
+WHERE l.highway IN ('primary', 'secondary')
+ORDER BY length_meters DESC LIMIT 10;
+```
+
+
+
+
 
 
 
