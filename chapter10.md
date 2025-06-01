@@ -231,6 +231,22 @@ WHERE l.highway IN ('primary', 'secondary')
 ORDER BY length_meters DESC LIMIT 10;
 ```
 
+**Listing 10.23 Finding ten closest shops near Brickell City Centre**
+```sql  
+WITH brickell AS (
+  SELECT way FROM florida.planet_osm_point
+  WHERE  name = 'Brickell City Centre' and railway = 'station'
+)
+SELECT p.name, p.shop,
+  ST_Distance(b.way,p.way) as distance_meters,
+  ST_Distance(b.way,p.way) * 3.28 as distance_feet
+FROM brickell as b
+JOIN florida.planet_osm_point AS p
+  ON ST_DWithin(b.way, p.way, 500)
+WHERE p.shop IS NOT NULL
+ORDER BY distance_meters LIMIT 10;
+```
+
 
 
 
