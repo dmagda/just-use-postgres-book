@@ -247,6 +247,36 @@ WHERE p.shop IS NOT NULL
 ORDER BY distance_meters LIMIT 10;
 ```
 
+**Listing 10.24 Checking a list of existing indexes**
+```sql
+SELECT indexname, indexdef
+FROM pg_indexes
+WHERE schemaname = 'florida' AND tablename LIKE 'planet_osm_%';
+```
+
+**Listing 10.25 Creating B-tree index on name column**
+```sql  
+CREATE INDEX florida_point_name_idx 
+ON florida.planet_osm_point(name) 
+WHERE name IS NOT NULL;
+```
+
+**Listing 10.26 Checking execution plan using GiST index**
+```sql  
+EXPLAIN (analyze, costs off)
+WITH brickell AS (
+  SELECT way FROM florida.planet_osm_point
+  WHERE name = 'Brickell City Centre' and railway = 'station'
+)
+SELECT p.name, p.shop,
+  ST_Distance(b.way,p.way) as distance_meters,
+  ST_Distance(b.way,p.way) * 3.28 as distance_feet
+FROM brickell as b
+JOIN florida.planet_osm_point AS p
+  ON ST_DWithin(b.way, p.way, 500)
+WHERE p.shop IS NOT NULL
+ORDER BY distance_meters LIMIT 10;
+```
 
 
 
