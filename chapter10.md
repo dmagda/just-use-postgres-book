@@ -278,6 +278,24 @@ WHERE p.shop IS NOT NULL
 ORDER BY distance_meters LIMIT 10;
 ```
 
+**Listing 10.27 Checking execution plan with ST_Distance**
+```sql 
+EXPLAIN (analyze, costs off)
+WITH brickell AS (
+  SELECT way FROM florida.planet_osm_point
+  WHERE name = 'Brickell City Centre' and railway = 'station'
+)
+SELECT p.name, p.shop,
+  ST_Distance(b.way,p.way) as distance_meters,
+  ST_Distance(b.way,p.way) * 3.28 as distance_feet
+FROM brickell as b
+JOIN florida.planet_osm_point AS p
+  ON ST_Distance(b.way, p.way) <= 500
+WHERE p.shop IS NOT NULL
+ORDER BY distance_meters LIMIT 10;
+```
+
+
 
 
 
