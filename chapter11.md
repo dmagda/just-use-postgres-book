@@ -64,3 +64,16 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
+**Listing 11.5 Updating mq.enqueue function to send notifications**
+```sql 
+CREATE OR REPLACE FUNCTION mq.enqueue(_message JSONB)
+RETURNS VOID AS $$
+BEGIN
+  INSERT INTO mq.queue (message)
+  VALUES (_message);
+
+  -- Notify listeners that a new message has been added
+  PERFORM pg_notify('queue_new_message', 'new_message');
+END;
+$$ LANGUAGE plpgsql;
+```
