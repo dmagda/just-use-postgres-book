@@ -103,3 +103,13 @@ docker run --name postgres-pgmq `
 SELECT * FROM pg_available_extensions
 WHERE name = 'pgmq';
 ```
+
+**Listing 11.9 Listing function supported by pgmq**
+```sql
+SELECT p.proname AS function_name,
+  pg_catalog.pg_get_function_arguments(p.oid) AS arguments
+FROM pg_catalog.pg_proc p
+JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
+WHERE n.nspname = 'pgmq';
+```
+
