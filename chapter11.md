@@ -112,3 +112,13 @@ JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
 WHERE n.nspname = 'pgmq';
 ```
 
+**Listing 11.10 Retrieving next visitor with 2 minutes visibility timeout**
+```sql
+SELECT msg_id, message, enqueued_at
+FROM pgmq.read(
+  queue_name => 'visitors_queue',
+  vt         => 120,
+  qty        => 1
+);
+```
+
