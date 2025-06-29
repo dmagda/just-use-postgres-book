@@ -48,7 +48,7 @@ docker run --name osm2pgsql --network="host" \
  -v ~/osm2pgsql-volume:/data \
  iboates/osm2pgsql:2.1.1 \
  -H 127.0.0.1 -P 5432 -d postgres -U postgres --schema florida \
- http://justusepostgres.s3-website.us-east-2.amazonaws.com/florida-250613.osm.pbf
+ http://justusepostgres.s3-website.us-east-2.amazonaws.com/florida-250501.osm.pbf
 ```
 
 **Listing 10.6 Preloading OSM dataset on Windows**
@@ -58,7 +58,7 @@ docker run --name osm2pgsql --network="host" `
  -v ${PWD}:/data `
  iboates/osm2pgsql:2.1.1 `
  -H 127.0.0.1 -P 5432 -d postgres -U postgres --schema florida `
- http://justusepostgres.s3-website.us-east-2.amazonaws.com/florida-250613.osm.pbf
+ http://justusepostgres.s3-website.us-east-2.amazonaws.com/florida-250501.osm.pbf
 ```
 
 **Listing 10.7 Listing tables created for dataset**
