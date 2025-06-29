@@ -177,7 +177,8 @@ FROM florida.planet_osm_polygon AS p
 JOIN disney_world AS d ON ST_Within(p.way, d.boundaries)
 WHERE p.name IS NOT NULL 
   AND p.tourism = 'theme_park'
-  AND NOT ST_Equals(p.way, d.boundaries);
+  AND NOT ST_Equals(p.way, d.boundaries)
+ORDER BY p.name;
 ```
 
 **Listing 10.19 Finding attractions within Disney’s Hollywood Studios**
