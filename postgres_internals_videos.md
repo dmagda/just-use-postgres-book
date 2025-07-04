@@ -17,7 +17,7 @@ Resources:
 
 Database connection pooling is a method to reduce the cost of opening and closing connections by maintaining a pool of open connections. To understand why connection pooling is so important, let’s take a look at what happens at the operating system (OS) level when there’s no connection pool between an application and the database.
 
-[![@DevMastersDB](/images/postgres_connection_pooling)](https://www.youtube.com/watch?v=Vq34xPYZwXg)
+[![@DevMastersDB](/images/postgres_connection_pooling.png)](https://www.youtube.com/watch?v=Vq34xPYZwXg)
 
 Resources:
 
