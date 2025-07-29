@@ -10,7 +10,7 @@ docker run --name postgres \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
     -p 5432:5432 \
     -v ~/postgres-volume/:/var/lib/postgresql/data \
-    -d postgres:latest
+    -d postgres:17.2
 ```
 
 **Listing 1.2 Starting Postgres container on Windows**
@@ -19,7 +19,7 @@ docker run --name postgres `
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
     -p 5432:5432 `
     -v ${PWD}/postgres-volume:/var/lib/postgresql/data `
-    -d postgres:latest
+    -d postgres:17.2
 ```
 
 **Listing 1.3 Connecting with psql**
@@ -29,7 +29,7 @@ docker exec -it postgres psql -U postgres
 
 **Listing 1.4 Creating sample table**
 ```sql
-CREATE TABLE trade(
+CREATE TABLE trades(
     id bigint,
     buyer_id integer,
     symbol text,
@@ -54,7 +54,7 @@ FROM generate_series(1,5) AS id;
 
 **Listing 1.7 Inserting 1000 sample trades**
 ```sql
-INSERT INTO trade (id, buyer_id, symbol, order_quantity, bid_price, order_time)
+INSERT INTO trades (id, buyer_id, symbol, order_quantity, bid_price, order_time)
     SELECT
         id,
         random(1,10) as buyer_id,
@@ -67,8 +67,8 @@ INSERT INTO trade (id, buyer_id, symbol, order_quantity, bid_price, order_time)
 
 **Listing 1.8 Most traded stocks by volume**
 ```sql
-SELECT symbol, count(order_quantity) AS total_volume
-FROM trade
+SELECT symbol, count(*) AS total_volume
+FROM trades
 GROUP BY symbol
 ORDER BY total_volume DESC;
 ```
@@ -76,7 +76,7 @@ ORDER BY total_volume DESC;
 **Listing 1.9 Top three buyers**
 ```sql
 SELECT buyer_id, sum(bid_price * order_quantity) AS total_value
-FROM trade
+FROM trades
 GROUP BY buyer_id
 ORDER BY total_value DESC
 LIMIT 3;
