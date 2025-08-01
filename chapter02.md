@@ -254,7 +254,7 @@ SELECT * FROM order_add_item(
 **Listing 2.24 Implementation of order_checkout function**
 ```sql
 CREATE OR REPLACE FUNCTION order_checkout(customer_id_param INT) 
-RETURNS TABLE (order_id UUID, customer_id INT, order_date timestamptz, total_amount DECIMAL) AS $$
+RETURNS TABLE (order_id UUID, customer_id INT, total_amount DECIMAL) AS $$
 DECLARE
     pending_order_id UUID; 
     final_total_amount DECIMAL := 0;
@@ -286,7 +286,7 @@ BEGIN
       AND oi.order_id = pending_order_id;
 
     RETURN QUERY  
-    SELECT o.id, o.customer_id, o.order_date, o.total_amount
+    SELECT o.id, o.customer_id, o.total_amount
     FROM sales.orders as o
     WHERE o.id = pending_order_id;
 END;
