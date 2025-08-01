@@ -92,7 +92,7 @@ current_play_duration AS (
     WHERE id = 12
 )
 SELECT is_change_visible_to_cte, 
-    (play_duration = 150) is_change_visible_to_primary
+    (play_duration = 150) as is_change_visible_to_primary
 FROM updated_play up
 JOIN current_play_duration cp ON up.song_id = cp.song_id;
 ```
@@ -111,7 +111,7 @@ current_play_duration AS (
     WHERE id = 12
 )
 SELECT is_change_visible_to_cte,
-    (play_duration = 160) is_change_visible_to_primary
+    (play_duration = 160) as is_change_visible_to_primary
 FROM updated_play up
 JOIN current_play_duration cp ON up.song_id = cp.song_id;
 ```
@@ -201,7 +201,7 @@ ORDER BY ps.path, p.play_start_time;
 ```sql
 SELECT song_id, SUM(play_duration) as total_duration
 FROM streaming.plays
-GROUP BY (song_id) ORDER BY total_duration DESC;
+GROUP BY song_id ORDER BY total_duration DESC;
 ```
 
 **Listing 3.11 Total play duration with users using self-join**
