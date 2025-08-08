@@ -133,8 +133,8 @@ final_result.add(non_recursive_result);
 // Step 4: Initialize the working table with the non-recursive result
 working_table = non_recursive_result;
 					
-// Step 5: Execute the recursive term until the working table is not empty
-// The working table is empty when the recursive condition resolves to true
+// Step 5: Execute the recursive term while the working table is not empty
+// The working table is not empty while the recursive condition resolves to true
 while (working_table is not empty) {
     // Step 6: Evaluate the recursive term using the current working table as input.
     // The recursive term is the SQL query defined in the recursive CTE
