@@ -20,7 +20,7 @@ CREATE TABLE omdb.phrases_dictionary (
     phrase_embedding VECTOR(1024)
 );
 
-CREATE OR REPLACE FUNCTION get_embedding(input_phrase TEXT)
+CREATE OR REPLACE FUNCTION omdb.get_embedding(input_phrase TEXT)
 RETURNS VECTOR(1024) AS $$
 DECLARE
     embedding VECTOR(1024);
