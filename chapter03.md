@@ -163,17 +163,21 @@ return final_result;
 **Listing 3.8 Songs played in sequence after a specific one**
 ```sql
 WITH RECURSIVE play_sequence AS (
-    SELECT id, user_id, song_id, play_start_time, play_duration, played_after
+    SELECT id, user_id, song_id,
+      play_start_time, play_duration, played_after
     FROM streaming.plays
-    WHERE id = 5	 	 
-			
-    UNION ALL		
-				
-    SELECT p.id, p.user_id, p.song_id, p.play_start_time, p.play_duration, p.played_after
+    WHERE id = 5	 
+
+    UNION ALL
+
+    SELECT p.id, p.user_id, p.song_id, p.play_start_time,
+       p.play_duration, p.played_after
     FROM streaming.plays p
     JOIN play_sequence ps ON p.played_after = ps.id
-)		
-SELECT * FROM play_sequence
+)
+SELECT user_id, song_id, play_start_time,
+  play_duration as duration, played_after
+FROM play_sequence
 ORDER BY play_start_time;
 ```
 
