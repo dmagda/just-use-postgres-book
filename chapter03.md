@@ -183,22 +183,22 @@ ORDER BY play_start_time;
 
 **Listing 3.9 Calculating total play duration for sequence**
 ```sql
-WITH RECURSIVE play_sequence(parent_id, path, total_duration) AS (
+WITH RECURSIVE play_sequence(parent_id, sequence, total_duration) AS (
     SELECT id, ARRAY[id], play_duration
     FROM streaming.plays
     WHERE id = 5
 
     UNION ALL
 
-    SELECT p.id, ps.path || p.id, total_duration + p.play_duration
+    SELECT p.id, ps.sequence || p.id, total_duration + p.play_duration
     FROM streaming.plays p
     JOIN play_sequence ps ON p.played_after = ps.parent_id
 )
-SELECT ps.parent_id, p.song_id, p.play_start_time, p.play_duration,
-ps.path, ps.total_duration
+SELECT p.song_id, p.play_start_time, p.play_duration,
+  ps.sequence, ps.total_duration
 FROM play_sequence ps
 JOIN streaming.plays p ON ps.parent_id = p.id
-ORDER BY ps.path, p.play_start_time;
+ORDER BY ps.sequence, p.play_start_time;
 ```
 
 **Listing 3.10 Total play duration for every song**
