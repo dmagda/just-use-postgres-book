@@ -6,8 +6,8 @@ Code listings for the Chapter 3, Modern SQL.
 ```shell
 docker cp data/streaming/. postgres:/home/.
 
-docker exec -it postgres psql -U postgres -c "\i /home/music_streaming_ddl.sql"
-docker exec -it postgres psql -U postgres -c "\i /home/music_streaming_data.sql"
+docker exec -it postgres psql -U postgres -c "\i /home/streaming_ddl.sql"
+docker exec -it postgres psql -U postgres -c "\i /home/streaming_data.sql"
 ```
 
 **Listing 3.1 Most Popular Songs**
