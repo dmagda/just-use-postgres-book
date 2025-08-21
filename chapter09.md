@@ -4,21 +4,21 @@ Code listings for Chapter 9, Postgres for time series.
 
 **Listing 9.1 Starting Postgres with TimescaleDB on Unix**
 ```shell
-mkdir ~/postgres-timescaledb-volume
+mkdir ~/postgres-timescale-volume
 
-docker run --name postgres-timescaledb \
+docker run --name postgres-timescale \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
     -p 5432:5432 \
-    -v ~/postgres-timescaledb-volume/:/var/lib/postgresql/data \
+    -v ~/postgres-timescale-volume/:/var/lib/postgresql/data \
     -d timescale/timescaledb:latest-pg17
 ```
 
 **Listing 9.2 Starting Postgres with TimescaleDB on Windows**
 ```shell
-docker run --name postgres-timescaledb `
+docker run --name postgres-timescale `
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
     -p 5432:5432 `
-    -v ${PWD}/postgres-timescaledb-volume/:/var/lib/postgresql/data `
+    -v ${PWD}/postgres-timescale-volume/:/var/lib/postgresql/data `
     -d timescale/timescaledb:latest-pg17
 ```
 
@@ -30,10 +30,10 @@ WHERE name = 'timescaledb';
 
 **Prealoading dataset**
 ```shell
-docker cp data/smartwatch/. postgres-timescaledb:/home/.
+docker cp data/smartwatch/. postgres-timescale:/home/.
 
-docker exec -it postgres-timescaledb psql -U postgres -c "\i /home/smartwatch_ddl.sql"
-docker exec -it postgres-timescaledb psql -U postgres -c "\i /home/smartwatch_data.sql"
+docker exec -it postgres-timescale psql -U postgres -c "\i /home/schema.sql"
+docker exec -it postgres-timescale psql -U postgres -c  "\i /home/data.sql"
 ```
 
 **Listing 9.4 Number of measurements per user device**
