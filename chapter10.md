@@ -112,8 +112,8 @@ WITH tampa_city_point AS (
   FROM florida.planet_osm_point
   WHERE name = 'Tampa' AND place = 'city'
 )
-SELECT 'https://www.openstreetmap.org/?mlat=' || ST_Y(coordinate) 
-  || '&mlon=' || ST_X(coordinate) || '#map=12' AS osm_url
+SELECT 'https://www.openstreetmap.org/?mlat=' || ST_Y(coordinate)
+  || '&mlon=' || ST_X(coordinate) AS osm_url
 FROM tampa_city_point;
 ```
 
@@ -124,8 +124,8 @@ WITH roost_hotel AS (
   WHERE name = 'Roost Apartment Hotel' AND tourism='hotel'
 )
 SELECT p.name, p.amenity,
-  ST_Distance(h.way,p.way) as distance_meters,
-  ST_Distance(h.way,p.way) * 3.28 as distance_feet
+  round(ST_Distance(h.way,p.way)) as distance_meters,
+  round(ST_Distance(h.way,p.way) * 3.28) as distance_feet
 FROM roost_hotel as h 
 JOIN florida.planet_osm_point AS p
   ON ST_DWithin(h.way, p.way, 500)
@@ -140,8 +140,8 @@ WITH roost_hotel AS (
     ST_MakePoint(-9178356.224987695, 3242002.0503882724), 3857) as point
 )
 SELECT p.name, p.amenity,
-  ST_Distance(h.point,p.way) as distance_meters,
-  ST_Distance(h.point,p.way) * 3.28 as distance_feet
+  round(ST_Distance(h.point,p.way)) as distance_meters,
+  round(ST_Distance(h.point,p.way) * 3.28) as distance_feet
 FROM roost_hotel as h 
 JOIN florida.planet_osm_point AS p
   ON ST_DWithin(h.point, p.way, 500)
@@ -224,23 +224,23 @@ WITH miami AS (
 )
 SELECT l.name, l.highway, 
   ST_NPoints(l.way) AS points_number,
-  ROUND(ST_Length(l.way)) AS length_meters,
-  ROUND(ST_Length(l.way) * 3.28084) AS length_feet
+  round(ST_Length(l.way)) AS len_meters,
+  round(ST_Length(l.way) * 3.28084) AS len_feet
 FROM florida.planet_osm_line l
 JOIN miami m ON ST_Intersects(l.way, m.boundaries)  
 WHERE l.highway IN ('primary', 'secondary')
-ORDER BY length_meters DESC LIMIT 10;
+ORDER BY len_meters DESC LIMIT 10;
 ```
 
 **Listing 10.23 Finding ten closest shops near Brickell City Centre**
 ```sql  
 WITH brickell AS (
   SELECT way FROM florida.planet_osm_point
-  WHERE  name = 'Brickell City Centre' and railway = 'station'
+  WHERE name = 'Brickell City Centre' and railway = 'station'
 )
 SELECT p.name, p.shop,
-  ST_Distance(b.way,p.way) as distance_meters,
-  ST_Distance(b.way,p.way) * 3.28 as distance_feet
+  round(ST_Distance(b.way,p.way)) as distance_meters,
+  round(ST_Distance(b.way,p.way) * 3.28) as distance_feet
 FROM brickell as b
 JOIN florida.planet_osm_point AS p
   ON ST_DWithin(b.way, p.way, 500)
@@ -270,8 +270,8 @@ WITH brickell AS (
   WHERE name = 'Brickell City Centre' and railway = 'station'
 )
 SELECT p.name, p.shop,
-  ST_Distance(b.way,p.way) as distance_meters,
-  ST_Distance(b.way,p.way) * 3.28 as distance_feet
+  round(ST_Distance(b.way,p.way)) as distance_meters,
+  round(ST_Distance(b.way,p.way) * 3.28) as distance_feet
 FROM brickell as b
 JOIN florida.planet_osm_point AS p
   ON ST_DWithin(b.way, p.way, 500)
@@ -287,8 +287,8 @@ WITH brickell AS (
   WHERE name = 'Brickell City Centre' and railway = 'station'
 )
 SELECT p.name, p.shop,
-  ST_Distance(b.way,p.way) as distance_meters,
-  ST_Distance(b.way,p.way) * 3.28 as distance_feet
+  round(ST_Distance(b.way,p.way)) as distance_meters,
+  round(ST_Distance(b.way,p.way) * 3.28) as distance_feet
 FROM brickell as b
 JOIN florida.planet_osm_point AS p
   ON ST_Distance(b.way, p.way) <= 500
