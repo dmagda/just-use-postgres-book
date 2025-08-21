@@ -33,9 +33,9 @@ WHERE name = 'vector';
 ```shell
 docker cp data/movie_pgvector/. postgres-pgvector:/home/.
 
-docker exec -it postgres-pgvector psql -U postgres -c "\i /home/omdb_movies_ddl.sql"
-docker exec -it postgres-pgvector psql -U postgres -c "\i /home/omdb_movies_data.sql"
-docker exec -it postgres-pgvector psql -U postgres -c "\i /home/movies_phrases_data.sql"
+docker exec -it postgres-pgvector psql -U postgres -c "\i /home/schema.sql"
+docker exec -it postgres-pgvector psql -U postgres -c "\i /home/movies.sql"
+docker exec -it postgres-pgvector psql -U postgres -c "\i /home/phrases.sql"
 ```
 
 **Listing 8.4 Pseudo-code for generating movie embeddings**
