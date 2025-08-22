@@ -42,7 +42,8 @@ BEGIN
   UPDATE mq.queue q
   SET status = 'processing'
   FROM new_messages WHERE q.id = new_messages.id
-  RETURNING q.id, q.message, q.created_at;
+  RETURNING q.id, q.message,
+    date_trunc('seconds',q.created_at) AS created_at;
 END;
 $$ LANGUAGE plpgsql;
 ```
