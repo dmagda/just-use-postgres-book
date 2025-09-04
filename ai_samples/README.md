@@ -8,21 +8,21 @@ First, start an Ollama container in Docker using one of the commands below.
 
 **Unix**:
 ```shell
-mkdir ~/ollama-volume
+docker create volume ollama-volume
 
 docker run --name ollama \
     -p 11434:11434 \
-    -v ~/ollama-volume:/root/.ollama \
+    -v ollama-volume:/root/.ollama \
     -d ollama/ollama:0.5.11
 ```
 
 **Windows** in PowerShell:
 ```shell
-mkdir ~/ollama-volume
+docker create volume ollama-volume
 
 docker run --name ollama `
     -p 11434:11434 `
-    -v ${PWD}/ollama-volume:/root/.ollama `
+    -v ollama-volume:/root/.ollama `
     -d ollama/ollama:0.5.11
 ```
 

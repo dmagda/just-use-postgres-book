@@ -4,21 +4,23 @@ Code listings for the Chapter 1, Meeting Postgres.
 
 **Listing 1.1 Starting Postgres container on Unix**
 ```shell
-mkdir ~/postgres-volume
+docker volume create postgres-volume
 
 docker run --name postgres \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
     -p 5432:5432 \
-    -v ~/postgres-volume/:/var/lib/postgresql/data \
+    -v postgres-volume:/var/lib/postgresql/data \
     -d postgres:17.2
 ```
 
 **Listing 1.2 Starting Postgres container on Windows**
 ```shell
+docker volume create postgres-volume
+
 docker run --name postgres `
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
     -p 5432:5432 `
-    -v ${PWD}/postgres-volume:/var/lib/postgresql/data `
+    -v postgres-volume:/var/lib/postgresql/data `
     -d postgres:17.2
 ```
 
