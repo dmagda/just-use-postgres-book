@@ -81,7 +81,7 @@ $$ LANGUAGE plpgsql;
 
 **Listing 11.6 Starting Postgres with pgmq on Unix**
 ```shell
-docker create volume postgres-pgmq-volume
+docker volume create postgres-pgmq-volume
 
 docker run --name postgres-pgmq \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
@@ -92,7 +92,7 @@ docker run --name postgres-pgmq \
 
 **Listing 11.7 Starting Postgres with pgmq on Windows**
 ```sql
-docker create volume postgres-pgmq-volume
+docker volume create postgres-pgmq-volume
 
 docker run --name postgres-pgmq `
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
