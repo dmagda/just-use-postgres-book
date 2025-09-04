@@ -8,7 +8,7 @@ First, start an Ollama container in Docker using one of the commands below.
 
 **Unix**:
 ```shell
-docker create volume ollama-volume
+docker volume create ollama-volume
 
 docker run --name ollama \
     -p 11434:11434 \
@@ -18,7 +18,7 @@ docker run --name ollama \
 
 **Windows** in PowerShell:
 ```shell
-docker create volume ollama-volume
+docker volume create ollama-volume
 
 docker run --name ollama `
     -p 11434:11434 `
