@@ -13,7 +13,7 @@ docker exec -it postgres psql -U postgres -c "\i /home/omdb_movies_data.sql"
 **Listing 6.1 Analyzing tokenization and normalization with ts_debug**
 ```sql
 SELECT token, description, lexemes, dictionary
-FROM ts_debug('5 explorers are travelling to a distant galaxy');
+FROM ts_debug('5 explorers are traveling to a distant galaxy');
 ```
 
 **Listing 6.2 Using Russian configuration for full-text search**
