@@ -173,7 +173,7 @@ WHERE bucket BETWEEN '2025-11-30 02:35' AND '2025-11-30 02:45' AND watch_id = 3
 ORDER BY bucket;
 ```
 
-**Listing 9.17 Getting data for 15 minutes window**
+**Listing 9.17 Inserting new heart beat measurements**
 ```sql
 INSERT INTO watch.heart_rate_measurements 
 (watch_id, recorded_at, heart_rate, activity) VALUES
