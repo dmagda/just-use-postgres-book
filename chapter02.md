@@ -185,7 +185,7 @@ ORDER BY total_sold DESC NULLS LAST, price DESC;
 
 **Listing 2.20 Function that returns product price**
 ```sql
-CREATE OR REPLACE FUNCTION get_product_price(product_id INT)
+CREATE OR REPLACE FUNCTION products.get_product_price(product_id INT)
 RETURNS NUMERIC(10, 2) AS $$
     SELECT price
     FROM products.catalog
@@ -208,7 +208,7 @@ WHERE (status = 'pending');
 
 **Listing 2.22 Implementation of order_add_item function**
 ```sql
-CREATE OR REPLACE FUNCTION order_add_item(customer_id_param INT, product_id_param INT, quantity_param INT)  
+CREATE OR REPLACE FUNCTION sales.order_add_item(customer_id_param INT, product_id_param INT, quantity_param INT)  
 RETURNS TABLE (order_id UUID, prod_id INT, quantity INT, prod_price DECIMAL) AS $$
 DECLARE
     pending_order_id UUID;  
@@ -244,7 +244,7 @@ $$ LANGUAGE plpgsql;
 
 **Listing 2.23 Adding product to shopping cart**
 ```sql
-SELECT * FROM order_add_item(
+SELECT * FROM sales.order_add_item(
     customer_id_param => 3,
     product_id_param => 3,
     quantity_param => 2
@@ -253,7 +253,7 @@ SELECT * FROM order_add_item(
 
 **Listing 2.24 Implementation of order_checkout function**
 ```sql
-CREATE OR REPLACE FUNCTION order_checkout(customer_id_param INT) 
+CREATE OR REPLACE FUNCTION sales.order_checkout(customer_id_param INT) 
 RETURNS TABLE (order_id UUID, customer_id INT, total_amount DECIMAL) AS $$
 DECLARE
     pending_order_id UUID; 
@@ -295,7 +295,7 @@ $$ LANGUAGE plpgsql;
 
 **Listing 2.25 Trigger function that updates order’s total amount**
 ```sql
-CREATE OR REPLACE FUNCTION update_order_total()
+CREATE OR REPLACE FUNCTION sales.update_order_total()
 RETURNS TRIGGER AS $$
 BEGIN
     UPDATE sales.orders
@@ -316,7 +316,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_update_order_total
 AFTER INSERT OR UPDATE OR DELETE ON sales.order_items
 FOR EACH ROW
-EXECUTE FUNCTION update_order_total();
+EXECUTE FUNCTION sales.update_order_total();
 ```
 
 **Listing 2.27  Sales report summary**
@@ -334,7 +334,7 @@ ORDER BY total_quantity_sold DESC, total_revenue DESC;
 
 **Listing 2.28 View for the sales report summary**
 ```sql
-CREATE VIEW product_sales_summary AS  
+CREATE VIEW sales.product_sales_summary AS  
 SELECT  
     c.name AS product_name,
     c.category,
@@ -348,7 +348,7 @@ ORDER BY total_quantity_sold DESC, total_revenue DESC;
 
 **Listing 2.29 View for monthly sales**
 ```sql
-CREATE MATERIALIZED VIEW monthly_sales_summary AS
+CREATE MATERIALIZED VIEW sales.monthly_sales_summary AS
 SELECT 
     date_trunc('month', o.order_date) AS sales_month,
     SUM(oi.quantity * oi.price) AS total_revenue,
@@ -361,26 +361,26 @@ ORDER BY sales_month;
 
 **Listing 2.30 Buying two flavors of coffee**
 ```sql
-SELECT order_add_item(
+SELECT sales.order_add_item(
     customer_id_param => 3,
     product_id_param => 1,
     quantity_param => 3
     );
         
-SELECT order_add_item(
+SELECT sales.order_add_item(
     customer_id_param => 3,
     product_id_param => 3,
     quantity_param => 2
     );
         
-SELECT * FROM order_checkout(customer_id_param => 3);
+SELECT * FROM sales.order_checkout(customer_id_param => 3);
 ```
 
 **Listing 2.31 Refreshing and querying materialized view**
 ```sql
-REFRESH MATERIALIZED VIEW monthly_sales_summary;
+REFRESH MATERIALIZED VIEW sales.monthly_sales_summary;
 
-SELECT * FROM monthly_sales_summary;
+SELECT * FROM sales.monthly_sales_summary;
 ```
 
 **Listing 2.32 Creating admin-level role for coffee chain**
