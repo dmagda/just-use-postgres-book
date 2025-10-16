@@ -28,11 +28,12 @@ BEGIN
     SELECT phrase_embedding INTO embedding
     FROM omdb.phrases_dictionary
     WHERE LOWER(phrase) = LOWER(input_phrase);
-    
+
     IF NOT FOUND THEN
-        RETURN NULL;
+        RAISE EXCEPTION 
+            'The seach phrase does not exist in the dictionary table.';
     END IF;
-    
+
     RETURN embedding;
 END;
 $$ LANGUAGE plpgsql;
