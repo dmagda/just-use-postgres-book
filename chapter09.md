@@ -10,7 +10,7 @@ docker run --name postgres-timescale \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
     -p 5432:5432 \
     -v postgres-timescale-volume:/var/lib/postgresql/data \
-    -d timescale/timescaledb:latest-pg17
+    -d timescale/timescaledb:2.19.2-pg17
 ```
 
 **Listing 9.2 Starting Postgres with TimescaleDB on Windows**
@@ -21,7 +21,7 @@ docker run --name postgres-timescale `
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
     -p 5432:5432 `
     -v postgres-timescale-volume:/var/lib/postgresql/data `
-    -d timescale/timescaledb:latest-pg17
+    -d timescale/timescaledb:2.19.2-pg17
 ```
 
 **Listing 9.3 Checking available TimescaleDB version**
