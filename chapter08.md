@@ -10,7 +10,7 @@ docker run --name postgres-pgvector \
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
     -p 5432:5432 \
     -v postgres-pgvector-volume:/var/lib/postgresql/data \
-    -d pgvector/pgvector:pg17
+    -d pgvector/pgvector:0.8.0-pg17
 ```
 
 **Listing 8.2 Starting Postgres with pgvector on Windows**
@@ -21,7 +21,7 @@ docker run --name postgres-pgvector `
     -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password `
     -p 5432:5432 `
     -v postgres-pgvector-volume:/var/lib/postgresql/data `
-    -d pgvector/pgvector:pg17
+    -d pgvector/pgvector:0.8.0-pg17
 ```
 
 **Listing 8.3 Checking available pgvector version**
@@ -107,7 +107,7 @@ ON omdb.movies
 USING ivfflat (movie_embedding vector_cosine_ops) WITH (lists = 5);
 ```
 
-**Listing 8.10 Creating IVFFlat index**
+**Listing 8.10 Checking execution plan with IVFFlat index**
 ```sql 
 EXPLAIN (analyze, costs off)
 SELECT id, name, description
